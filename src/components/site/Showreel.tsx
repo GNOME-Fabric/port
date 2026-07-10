@@ -15,6 +15,11 @@ export function Showreel() {
   const [open, setOpen] = useState(false);
   const ref = useReveal<HTMLDivElement>();
 
+export function Showreel() {
+  const [open, setOpen] = useState(false);
+  const ref = useReveal<HTMLDivElement>();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
   useEffect(() => {
     if (open) {
       openVideoModal();
@@ -31,11 +36,57 @@ export function Showreel() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Pause the preview whenever it's off-screen, a modal is open, or the tab
+  // is hidden. Resume from the same frame on return — the <video> element is
+  // never unmounted so currentTime is preserved automatically.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
+    let visible = false;
+    let modalOpen = getAnyVideoModalOpen();
+    let docVisible = typeof document !== "undefined" ? !document.hidden : true;
+
+    const sync = () => {
+      const shouldPlay = visible && !modalOpen && docVisible;
+      if (shouldPlay) {
+        if (video.paused) video.play().catch(() => {});
+      } else if (!video.paused) {
+        video.pause();
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) visible = e.isIntersecting;
+        sync();
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(video);
+
+    const unsub = subscribeVideoModal((o) => {
+      modalOpen = o;
+      sync();
+    });
+
+    const onVis = () => {
+      docVisible = !document.hidden;
+      sync();
+    };
+    document.addEventListener("visibilitychange", onVis);
+
+    return () => {
+      io.disconnect();
+      unsub();
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, []);
 
   return (
     <section id="showreel" className="pb-24">
       <div ref={ref} className="max-w-6xl mx-auto px-6">
+
         {/* Technical Header Meta */}
         <div className="flex justify-between items-end mb-4 text-[10px] font-medium uppercase tracking-[0.2em] text-accent/60">
           <div className="flex gap-6">
