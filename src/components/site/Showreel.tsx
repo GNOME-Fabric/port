@@ -90,15 +90,18 @@ export function Showreel() {
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover"
             />
-            {/* Muted inline preview — plays instantly, no audio, no chapter UI */}
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0`}
-              title="Matsuo showreel — silent preview"
-              className="absolute inset-0 w-full h-full pointer-events-none scale-[1.35] group-hover:scale-[1.4] transition-transform duration-700"
-              allow="autoplay; encrypted-media"
-              tabIndex={-1}
-              aria-hidden="true"
-            />
+            {/* Muted inline preview — only mounted while the hero is in view
+                and no fullscreen modal is playing (keeps one YT decoder max) */}
+            {showPreview && (
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0`}
+                title="Matsuo showreel — silent preview"
+                className="absolute inset-0 w-full h-full pointer-events-none scale-[1.35] group-hover:scale-[1.4] transition-transform duration-700"
+                allow="autoplay; encrypted-media"
+                tabIndex={-1}
+                aria-hidden="true"
+              />
+            )}
             {/* Muted badge — top-right, above overlays */}
             <span className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/70 backdrop-blur-sm border border-accent/30 text-foreground/90 px-2.5 py-1 rounded-full text-[10px] font-medium tracking-widest uppercase">
               <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current" aria-hidden="true">
