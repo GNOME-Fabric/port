@@ -76,13 +76,7 @@ export function Showreel() {
               aria-hidden="true"
             />
 
-                title="Matsuo showreel — silent preview"
-                className="absolute inset-0 w-full h-full pointer-events-none scale-[1.35] group-hover:scale-[1.4] transition-transform duration-700"
-                allow="autoplay; encrypted-media"
-                tabIndex={-1}
-                aria-hidden="true"
-              />
-            )}
+
 
             {/* Muted badge — top-right, above overlays */}
             <span className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/70 backdrop-blur-sm border border-accent/30 text-foreground/90 px-2.5 py-1 rounded-full text-[10px] font-medium tracking-widest uppercase">
