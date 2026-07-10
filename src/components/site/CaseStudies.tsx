@@ -99,7 +99,7 @@ function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
       className="space-y-6 block group text-left w-full"
     >
       <div className="flex justify-between items-end border-b border-border pb-2">
-        <span className="font-heading text-2xl text-accent">{p.n}</span>
+        <span className="font-heading text-2xl text-accent text-glow-accent">{p.n}</span>
         <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
           File ID: {p.fileId}
         </span>
