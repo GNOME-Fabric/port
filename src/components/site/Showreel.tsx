@@ -70,7 +70,7 @@ export function Showreel() {
         </div>
 
         {/* Main Reel Interactive Element */}
-        <div className="relative group cursor-pointer">
+        <div ref={previewWrapRef} className="relative group cursor-pointer">
           {/* Outer Border Scaffolding */}
           <div className="absolute -inset-2 border border-accent/10 pointer-events-none group-hover:border-accent/30 transition-colors duration-500" />
           {/* Corner Brackets */}
