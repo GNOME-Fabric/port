@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getAnyVideoModalOpen, subscribeVideoModal } from "@/lib/modal-state";
 
 /**
  * Subtle ambient dust field — sits behind the content, low opacity, small dots.
