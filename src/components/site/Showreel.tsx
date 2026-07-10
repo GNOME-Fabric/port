@@ -65,7 +65,7 @@ export function Showreel() {
           </div>
           <div className="text-right flex flex-col items-end">
             <span className="text-accent">Global Timecode</span>
-            <span className="text-foreground text-sm tabular-nums">00:00:42:18</span>
+            <span className="text-foreground text-sm tabular-nums">00:56:27</span>
           </div>
         </div>
 
