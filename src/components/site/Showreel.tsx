@@ -119,6 +119,7 @@ export function Showreel() {
             {/* Self-hosted muted MP4 preview — no YouTube chrome, instant
                 return from modal, always mounted so it never reloads. */}
             <video
+              ref={videoRef}
               src={previewVideo.url}
               autoPlay
               loop
