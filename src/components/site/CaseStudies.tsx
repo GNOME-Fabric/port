@@ -204,6 +204,19 @@ type Tab = "cuts" | "creators";
 
 export function CaseStudies() {
   const [playing, setPlaying] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!playing) return;
+    openVideoModal();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPlaying(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      closeVideoModal();
+    };
+  }, [playing]);
   const [tab, setTab] = useState<Tab>("cuts");
 
   return (
