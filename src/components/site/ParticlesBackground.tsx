@@ -88,8 +88,8 @@ export function ParticlesBackground() {
 
     let rafId = 0;
     let paused = getAnyVideoModalOpen();
-    const unsub = subscribeVideoModal((n) => {
-      paused = n > 0;
+    const unsub = subscribeVideoModal((open) => {
+      paused = open;
     });
 
     function frame() {
