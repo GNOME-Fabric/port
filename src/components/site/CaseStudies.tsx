@@ -18,6 +18,7 @@ type CreatorCut = {
   ytId: string;
   title: string;
   format: "SHORT" | "LONG";
+  views: string;
 };
 
 const YT = (id: string) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
