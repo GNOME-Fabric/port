@@ -42,8 +42,8 @@ export function ParticlesBackground() {
     };
     let particles: P[] = [];
 
-    const density = prefersReduced ? 0 : 0.00011;
-    const maxParticles = 110;
+    const density = prefersReduced ? 0 : 0.00016;
+    const maxParticles = 160;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -55,14 +55,14 @@ export function ParticlesBackground() {
 
       const count = Math.min(maxParticles, Math.floor(width * height * density));
       particles = new Array(count).fill(0).map(() => {
-        const r = Math.random() * 1.6 + 0.3;
+        const r = Math.random() * 2.2 + 0.6;
         return {
           x: Math.random() * width,
           y: Math.random() * height,
           vx: (Math.random() - 0.5) * 0.05,
           vy: (Math.random() - 0.5) * 0.05,
           r,
-          baseA: 0.15 + Math.random() * 0.35,
+          baseA: 0.45 + Math.random() * 0.45,
           a: 0,
           hue: Math.random() < 0.75 ? 0 : 1,
           phase: Math.random() * Math.PI * 2,
