@@ -162,7 +162,7 @@ function CutCard({ c, onPlay }: { c: CreatorCut; onPlay: (id: string) => void })
       <div className="flex justify-between items-end border-b border-border pb-2 mb-3">
         <span className="font-heading text-lg text-accent">{c.n}</span>
         <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-          {c.format} · <span className="text-bright">{c.views} views</span>
+          {c.format}
         </span>
       </div>
       <div className="w-full aspect-video bg-surface border border-border rounded-md overflow-hidden relative">
@@ -173,14 +173,26 @@ function CutCard({ c, onPlay }: { c: CreatorCut; onPlay: (id: string) => void })
           className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
         />
         <span className="absolute inset-0 bg-background/25 group-hover:bg-background/10 transition-colors" />
+        {/* Views chip — visible, accent-forward */}
+        <span className="absolute top-3 left-3 flex items-center gap-1.5 bg-accent text-accent-foreground px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wider tabular-nums shadow-lg">
+          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current" aria-hidden="true">
+            <path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 110-8 4 4 0 010 8zm0-2a2 2 0 100-4 2 2 0 000 4z" />
+          </svg>
+          {c.views}
+        </span>
         <span className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xs tracking-widest uppercase bg-accent text-accent-foreground py-1.5 px-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="text-xs tracking-widest uppercase bg-background/80 text-foreground py-1.5 px-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
             Play
           </span>
         </span>
       </div>
-      <div className="mt-3 text-sm text-foreground/80 group-hover:text-accent transition-colors">
-        {c.title}
+      <div className="mt-3 flex items-baseline justify-between gap-3">
+        <span className="text-sm text-foreground/80 group-hover:text-accent transition-colors">
+          {c.title}
+        </span>
+        <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest shrink-0">
+          {c.views} views
+        </span>
       </div>
     </button>
   );
