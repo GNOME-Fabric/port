@@ -43,11 +43,29 @@ export function Showreel() {
             aria-label="Play showreel"
             className="relative aspect-video w-full block overflow-hidden bg-surface shadow-2xl"
           >
+            {/* Poster fallback beneath iframe */}
             <img
               src={posterImg}
-              alt="Matsuo showreel poster"
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100"
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover"
             />
+            {/* Muted, looping inline preview — plays instantly, no audio */}
+            <iframe
+              src={`https://www.youtube.com/embed/${REEL_YT_ID}?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&playlist=${REEL_YT_ID}`}
+              title="Matsuo showreel — silent preview"
+              className="absolute inset-0 w-full h-full pointer-events-none scale-[1.35] group-hover:scale-[1.4] transition-transform duration-700"
+              allow="autoplay; encrypted-media"
+              tabIndex={-1}
+              aria-hidden="true"
+            />
+            {/* Muted badge — top-right, above overlays */}
+            <span className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/70 backdrop-blur-sm border border-accent/30 text-foreground/90 px-2.5 py-1 rounded-full text-[10px] font-medium tracking-widest uppercase">
+              <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current" aria-hidden="true">
+                <path d="M16.5 12A4.5 4.5 0 0014 8v2.18l2.45 2.45a4.22 4.22 0 00.05-.63zM19 12c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.94 8.94 0 0021 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+              </svg>
+              Muted · click for sound
+            </span>
 
             {/* Editorial Overlays */}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
