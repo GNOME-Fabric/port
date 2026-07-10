@@ -13,6 +13,13 @@ type Project = {
   description: string;
 };
 
+type CreatorCut = {
+  n: string;
+  ytId: string;
+  title: string;
+  format: "SHORT" | "LONG";
+};
+
 const YT = (id: string) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
 
 const PROJECTS: Project[] = [
@@ -22,8 +29,8 @@ const PROJECTS: Project[] = [
     ytId: "g9DVFUj4cAU",
     title: "Crypto Motion Cut",
     category: "Finance / Crypto — Advertisement",
-    metricLabel: "Type",
-    metricValue: "MOTION",
+    metricLabel: "Client",
+    metricValue: "Capital Manager",
     stack: "Illustrator · After Effects",
     description:
       "Short-form motion design edit for educational and crypto content. Fast pacing without losing narrative rhythm.",
@@ -34,8 +41,8 @@ const PROJECTS: Project[] = [
     ytId: "qH44hSe3cso",
     title: "Explainer Intro",
     category: "Educational — YouTube",
-    metricLabel: "Type",
-    metricValue: "INTRO",
+    metricLabel: "Client",
+    metricValue: "YouTube Strategist",
     stack: "Premiere · After Effects",
     description:
       "Intro for explainer long-form content, built around strong hooks and motion-typography compositions.",
@@ -46,8 +53,8 @@ const PROJECTS: Project[] = [
     ytId: "9p4A67Q61TI",
     title: "High-Energy Short",
     category: "Entertainment / Study — Short-form",
-    metricLabel: "Type",
-    metricValue: "SHORT",
+    metricLabel: "Client",
+    metricValue: "Personal Study",
     stack: "After Effects",
     description:
       "Study compilation of compositions with fast pacing, visual effects, and a flashy style.",
@@ -58,12 +65,27 @@ const PROJECTS: Project[] = [
     ytId: "oXdlgQFxXKg",
     title: "Short-form Advertisement",
     category: "Advertisement — Short-form",
-    metricLabel: "Type",
-    metricValue: "TEASER",
+    metricLabel: "Client",
+    metricValue: "Teaser Project",
     stack: "Premiere · After Effects",
     description:
       "Clean marketing short-form piece exploring typographic rhythm and easing curves in the reel palette.",
   },
+];
+
+const BADGE: Record<string, string> = {
+  "01": "MOTION",
+  "02": "INTRO",
+  "03": "SHORT",
+  "04": "TEASER",
+};
+
+const CREATOR_CUTS: CreatorCut[] = [
+  { n: "05", ytId: "fUHbwtS3Xbg", title: "Creator Short — Cut A", format: "SHORT" },
+  { n: "06", ytId: "1VY6riUQHd8", title: "Creator Short — Cut B", format: "SHORT" },
+  { n: "07", ytId: "yxAgdK6P3Ws", title: "Long-form Feature — Ep. 01", format: "LONG" },
+  { n: "08", ytId: "4BVeqHoqk0E", title: "Long-form Feature — Ep. 02", format: "LONG" },
+  { n: "09", ytId: "vPvFLXpONDU", title: "Long-form Feature — Ep. 03", format: "LONG" },
 ];
 
 function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
@@ -95,7 +117,7 @@ function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
           </span>
         </span>
         <span className="absolute top-3 left-3 text-[10px] font-medium tracking-widest uppercase text-foreground/80 bg-background/60 px-2 py-1 rounded-sm backdrop-blur-sm">
-          {p.n} · {p.metricValue}
+          {p.n} · {BADGE[p.n]}
         </span>
       </div>
       <div className="flex flex-col md:flex-row gap-8">
@@ -127,25 +149,99 @@ function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
   );
 }
 
+function CutCard({ c, onPlay }: { c: CreatorCut; onPlay: (id: string) => void }) {
+  const ref = useReveal<HTMLButtonElement>();
+  return (
+    <button
+      ref={ref}
+      type="button"
+      onClick={() => onPlay(c.ytId)}
+      className="text-left group block"
+    >
+      <div className="flex justify-between items-end border-b border-border pb-2 mb-3">
+        <span className="font-heading text-lg text-accent">{c.n}</span>
+        <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
+          {c.format}
+        </span>
+      </div>
+      <div className="w-full aspect-video bg-surface border border-border rounded-md overflow-hidden relative">
+        <img
+          src={YT(c.ytId)}
+          alt={c.title}
+          loading="lazy"
+          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+        />
+        <span className="absolute inset-0 bg-background/25 group-hover:bg-background/10 transition-colors" />
+        <span className="absolute inset-0 flex items-center justify-center">
+          <span className="text-xs tracking-widest uppercase bg-accent text-accent-foreground py-1.5 px-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+            Play
+          </span>
+        </span>
+      </div>
+      <div className="mt-3 text-sm text-foreground/80 group-hover:text-accent transition-colors">
+        {c.title}
+      </div>
+    </button>
+  );
+}
+
+type Tab = "cuts" | "creators";
+
 export function CaseStudies() {
   const [playing, setPlaying] = useState<string | null>(null);
+  const [tab, setTab] = useState<Tab>("cuts");
 
   return (
     <section id="work" className="py-24 bg-surface/10 border-y border-border">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center gap-4 mb-16">
+        <div className="flex items-center gap-4 mb-10">
           <h2 className="font-heading text-4xl text-foreground">Case Studies</h2>
           <div className="h-px flex-1 bg-border" />
           <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-            Selected 04 / 04
+            {tab === "cuts" ? "Selected 04 / 04" : `Creator Cuts ${CREATOR_CUTS.length} / ${CREATOR_CUTS.length}`}
           </span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-24">
-          {PROJECTS.map((p) => (
-            <Entry key={p.n} p={p} onPlay={setPlaying} />
+        <div
+          role="tablist"
+          aria-label="Case studies view"
+          className="inline-flex border border-border rounded-md p-1 mb-16 bg-background/40"
+        >
+          {(
+            [
+              { id: "cuts", label: "Selected Cuts" },
+              { id: "creators", label: "Creator Work" },
+            ] as { id: Tab; label: string }[]
+          ).map((t) => (
+            <button
+              key={t.id}
+              role="tab"
+              aria-selected={tab === t.id}
+              onClick={() => setTab(t.id)}
+              className={`px-4 py-2 text-[11px] font-medium tracking-widest uppercase rounded-sm transition-colors ${
+                tab === t.id
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t.label}
+            </button>
           ))}
         </div>
+
+        {tab === "cuts" ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-24">
+            {PROJECTS.map((p) => (
+              <Entry key={p.n} p={p} onPlay={setPlaying} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {CREATOR_CUTS.map((c) => (
+              <CutCard key={c.n} c={c} onPlay={setPlaying} />
+            ))}
+          </div>
+        )}
       </div>
 
       {playing && (
