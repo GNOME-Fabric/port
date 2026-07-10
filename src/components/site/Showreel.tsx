@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
-import posterImg from "@/assets/showreel-poster.jpg";
 import { useReveal } from "@/hooks/use-reveal";
-import {
-  closeVideoModal,
-  openVideoModal,
-  useAnyVideoModalOpen,
-} from "@/lib/modal-state";
+import { closeVideoModal, openVideoModal } from "@/lib/modal-state";
 
 const REEL_YT_ID = "o_SwaTpc0VQ";
+// Skip past the first seconds where YouTube's title/nav chrome fades out.
+const PREVIEW_START = 4;
 
 export function Showreel() {
   const [open, setOpen] = useState(false);
   const ref = useReveal<HTMLDivElement>();
-  const anyModalOpen = useAnyVideoModalOpen();
 
   useEffect(() => {
     if (open) {
@@ -30,9 +26,6 @@ export function Showreel() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  // Preview loops continuously; only pauses (unmounts) when a fullscreen
-  // video modal is playing so the highlighted video stays smooth.
-  const showPreview = !anyModalOpen;
 
 
   return (
