@@ -22,8 +22,8 @@ const PROJECTS: Project[] = [
     ytId: "g9DVFUj4cAU",
     title: "Crypto Motion Cut",
     category: "Finance / Crypto — Advertisement",
-    metricLabel: "Format",
-    metricValue: "SHORT",
+    metricLabel: "Type",
+    metricValue: "MOTION",
     stack: "Illustrator · After Effects",
     description:
       "Short-form motion design edit for educational and crypto content. Fast pacing without losing narrative rhythm.",
@@ -34,8 +34,8 @@ const PROJECTS: Project[] = [
     ytId: "qH44hSe3cso",
     title: "Explainer Intro",
     category: "Educational — YouTube",
-    metricLabel: "Format",
-    metricValue: "LONG",
+    metricLabel: "Type",
+    metricValue: "INTRO",
     stack: "Premiere · After Effects",
     description:
       "Intro for explainer long-form content, built around strong hooks and motion-typography compositions.",
@@ -46,8 +46,8 @@ const PROJECTS: Project[] = [
     ytId: "9p4A67Q61TI",
     title: "High-Energy Short",
     category: "Entertainment / Study — Short-form",
-    metricLabel: "Format",
-    metricValue: "MOTION",
+    metricLabel: "Type",
+    metricValue: "SHORT",
     stack: "After Effects",
     description:
       "Study compilation of compositions with fast pacing, visual effects, and a flashy style.",
@@ -58,8 +58,8 @@ const PROJECTS: Project[] = [
     ytId: "oXdlgQFxXKg",
     title: "Short-form Advertisement",
     category: "Advertisement — Short-form",
-    metricLabel: "Avg. Retention",
-    metricValue: "61%",
+    metricLabel: "Type",
+    metricValue: "TEASER",
     stack: "Premiere · After Effects",
     description:
       "Clean marketing short-form piece exploring typographic rhythm and easing curves in the reel palette.",
