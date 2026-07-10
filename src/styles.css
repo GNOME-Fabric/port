@@ -175,3 +175,11 @@
     0 0 24px color-mix(in oklab, var(--accent-color) 30%, transparent);
 }
 
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor body,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
