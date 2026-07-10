@@ -6,7 +6,6 @@ import { CaseStudies } from "@/components/site/CaseStudies";
 import { ClientStrip } from "@/components/site/ClientStrip";
 import { Testimonials } from "@/components/site/Testimonials";
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { ParticlesBackground } from "@/components/site/ParticlesBackground";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,7 +33,6 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen text-foreground relative">
-      <ParticlesBackground />
       <div className="relative z-10">
         <SiteNav />
         <main>
