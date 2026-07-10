@@ -4,7 +4,7 @@ export function SiteNav() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <a
           href="#top"
-          className="font-heading text-2xl tracking-wider text-bright hover:text-accent transition-colors"
+          className="font-heading text-2xl tracking-wider text-bright text-glow hover:text-accent transition-colors"
         >
           MATSUO // EDIT
         </a>
