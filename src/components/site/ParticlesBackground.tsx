@@ -80,7 +80,7 @@ export function ParticlesBackground() {
     };
 
     const tick = () => {
-      if (!running) return;
+      if (!running || paused) return;
       t += 0.008;
 
       const pvx = pointer.x - pointer.px;
