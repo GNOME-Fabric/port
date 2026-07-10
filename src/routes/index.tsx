@@ -41,6 +41,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen text-foreground relative">
+      <CustomCursor />
       <ParticlesBackground />
       <div className="relative z-10">
         <SiteNav />
