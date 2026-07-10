@@ -166,7 +166,7 @@ function CutCard({ c, onPlay }: { c: CreatorCut; onPlay: (id: string) => void })
           {c.format}
         </span>
       </div>
-      <div className="w-full aspect-video bg-surface border border-border rounded-md overflow-hidden relative">
+      <div className="w-full aspect-video bg-surface border border-border rounded-md overflow-hidden relative transition-all duration-500 group-hover:shadow-glow group-hover:border-accent/40">
         <img
           src={YT(c.ytId)}
           alt={c.title}
