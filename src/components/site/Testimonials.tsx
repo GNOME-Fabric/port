@@ -1,4 +1,6 @@
 import { useReveal } from "@/hooks/use-reveal";
+import anthonyAvatar from "@/assets/anthony-avatar.png.asset.json";
+import luizaAvatar from "@/assets/luiza-avatar.jpg.asset.json";
 
 const QUOTES = [
   {
@@ -7,6 +9,7 @@ const QUOTES = [
       "Great editor! Incredibly fast turnaround, quick communication and super receptive to feedback.",
     name: "Anthony C.",
     role: "Content Creator",
+    avatar: anthonyAvatar.url,
   },
   {
     n: "02",
@@ -14,6 +17,7 @@ const QUOTES = [
       "Working with Mateus has been awesome! He's reliable and consistently delivers high-quality work. Definitely partnering up again for future projects!",
     name: "Luiza V.",
     role: "Content Creator",
+    avatar: luizaAvatar.url,
   },
 ];
 
@@ -28,7 +32,12 @@ function Quote({ q }: { q: (typeof QUOTES)[number] }) {
         “{q.quote}”
       </blockquote>
       <div className="flex items-center gap-3">
-        <div className="size-10 rounded-full bg-surface border border-border" />
+        <img
+          src={q.avatar}
+          alt={q.name}
+          loading="lazy"
+          className="size-10 rounded-full object-cover border border-border bg-surface"
+        />
         <div>
           <div className="text-sm font-semibold text-bright">{q.name}</div>
           <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
