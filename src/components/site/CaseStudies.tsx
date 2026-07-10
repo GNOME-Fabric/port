@@ -162,7 +162,7 @@ function CutCard({ c, onPlay }: { c: CreatorCut; onPlay: (id: string) => void })
       <div className="flex justify-between items-end border-b border-border pb-2 mb-3">
         <span className="font-heading text-lg text-accent">{c.n}</span>
         <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-          {c.format}
+          {c.format} · <span className="text-bright">{c.views} views</span>
         </span>
       </div>
       <div className="w-full aspect-video bg-surface border border-border rounded-md overflow-hidden relative">
