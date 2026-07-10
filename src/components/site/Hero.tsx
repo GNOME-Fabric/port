@@ -14,10 +14,9 @@ export function Hero() {
             <h1 className="font-heading text-7xl md:text-9xl leading-none text-foreground mb-6">
               Matsuo
             </h1>
-            <p className="text-muted-foreground text-lg md:text-xl max-w-[35ch] leading-relaxed">
-              Making complex ideas impossible to skip. Long-form business and
-              educational YouTube, motion design, and short-form gaming edits
-              engineered around retention.
+            <p className="text-muted-foreground text-lg md:text-xl max-w-[42ch] leading-relaxed">
+              Making complex ideas impossible to skip. More than 3 years working
+              with educational and finance content creators.
             </p>
           </div>
           <div className="text-right hidden md:block">

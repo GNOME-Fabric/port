@@ -2,7 +2,7 @@ import { useState } from "react";
 import posterImg from "@/assets/showreel-poster.jpg";
 import { useReveal } from "@/hooks/use-reveal";
 
-const REEL_DRIVE_ID = "1E7Jr-VFx5IedqVxJ2ceSmv8ccbodcMTx";
+const REEL_YT_ID = "o_SwaTpc0VQ";
 
 export function Showreel() {
   const [open, setOpen] = useState(false);
@@ -62,7 +62,7 @@ export function Showreel() {
               Close [ESC]
             </button>
             <iframe
-              src={`https://drive.google.com/file/d/${REEL_DRIVE_ID}/preview`}
+              src={`https://www.youtube.com/embed/${REEL_YT_ID}?autoplay=1&rel=0`}
               className="w-full h-full rounded-md border border-border"
               allow="autoplay"
               allowFullScreen
