@@ -1,5 +1,6 @@
 import { useReveal } from "@/hooks/use-reveal";
 import { Timecode } from "./Timecode";
+import { ContactIcons } from "./ContactIcons";
 
 export function Hero() {
   const ref = useReveal<HTMLDivElement>();
@@ -11,19 +12,25 @@ export function Hero() {
             <span className="block text-accent text-sm font-medium tracking-[0.2em] mb-4 uppercase">
               Lead Video Editor
             </span>
-            <h1 className="font-heading text-7xl md:text-9xl leading-none text-foreground mb-6">
+            <h1 className="font-heading text-7xl md:text-9xl leading-none text-foreground text-glow mb-6">
               Matsuo
             </h1>
-            <p className="text-muted-foreground text-lg md:text-xl max-w-[42ch] leading-relaxed">
+            <p className="text-muted-foreground text-lg md:text-xl max-w-[42ch] leading-relaxed mb-8">
               Making complex ideas impossible to skip. More than 3 years working
               with educational and finance content creators.
             </p>
+            <div className="flex items-center gap-4">
+              <ContactIcons size="sm" />
+              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.25em]">
+                Reach out
+              </span>
+            </div>
           </div>
           <div className="text-right hidden md:block">
             <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1">
               Session Timecode
             </div>
-            <div className="text-3xl font-heading text-accent leading-none">
+            <div className="text-3xl font-heading text-accent leading-none text-glow">
               <Timecode />
             </div>
           </div>

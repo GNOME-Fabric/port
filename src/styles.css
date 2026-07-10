@@ -140,3 +140,17 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+@utility shadow-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--accent-color) 20%, transparent),
+    0 0 24px -6px color-mix(in oklab, var(--accent-color) 45%, transparent);
+}
+
+@utility shadow-glow-soft {
+  box-shadow: 0 0 40px -12px color-mix(in oklab, var(--accent-color) 30%, transparent);
+}
+
+@utility text-glow {
+  text-shadow: 0 0 18px color-mix(in oklab, var(--accent-color) 35%, transparent);
+}
