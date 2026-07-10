@@ -1,12 +1,52 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import posterImg from "@/assets/showreel-poster.jpg";
 import { useReveal } from "@/hooks/use-reveal";
+import {
+  closeVideoModal,
+  openVideoModal,
+  useAnyVideoModalOpen,
+} from "@/lib/modal-state";
 
 const REEL_YT_ID = "o_SwaTpc0VQ";
 
 export function Showreel() {
   const [open, setOpen] = useState(false);
   const ref = useReveal<HTMLDivElement>();
+  const previewWrapRef = useRef<HTMLDivElement | null>(null);
+  const [previewInView, setPreviewInView] = useState(false);
+  const anyModalOpen = useAnyVideoModalOpen();
+
+  // Only mount the muted preview iframe when the hero is on screen AND no
+  // fullscreen video modal is currently playing — keeps a single YT decoder
+  // active at a time.
+  useEffect(() => {
+    const el = previewWrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setPreviewInView(entry.isIntersecting),
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      openVideoModal();
+      return () => closeVideoModal();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const showPreview = previewInView && !anyModalOpen;
 
   return (
     <section id="showreel" className="pb-24">
@@ -30,7 +70,7 @@ export function Showreel() {
         </div>
 
         {/* Main Reel Interactive Element */}
-        <div className="relative group cursor-pointer">
+        <div ref={previewWrapRef} className="relative group cursor-pointer">
           {/* Outer Border Scaffolding */}
           <div className="absolute -inset-2 border border-accent/10 pointer-events-none group-hover:border-accent/30 transition-colors duration-500" />
           {/* Corner Brackets */}
@@ -50,15 +90,18 @@ export function Showreel() {
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover"
             />
-            {/* Muted inline preview — plays instantly, no audio, no chapter UI */}
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0`}
-              title="Matsuo showreel — silent preview"
-              className="absolute inset-0 w-full h-full pointer-events-none scale-[1.35] group-hover:scale-[1.4] transition-transform duration-700"
-              allow="autoplay; encrypted-media"
-              tabIndex={-1}
-              aria-hidden="true"
-            />
+            {/* Muted inline preview — only mounted while the hero is in view
+                and no fullscreen modal is playing (keeps one YT decoder max) */}
+            {showPreview && (
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0`}
+                title="Matsuo showreel — silent preview"
+                className="absolute inset-0 w-full h-full pointer-events-none scale-[1.35] group-hover:scale-[1.4] transition-transform duration-700"
+                allow="autoplay; encrypted-media"
+                tabIndex={-1}
+                aria-hidden="true"
+              />
+            )}
             {/* Muted badge — top-right, above overlays */}
             <span className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/70 backdrop-blur-sm border border-accent/30 text-foreground/90 px-2.5 py-1 rounded-full text-[10px] font-medium tracking-widest uppercase">
               <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current" aria-hidden="true">

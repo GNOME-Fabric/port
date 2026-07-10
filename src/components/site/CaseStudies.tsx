@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useReveal } from "@/hooks/use-reveal";
+import { closeVideoModal, openVideoModal } from "@/lib/modal-state";
 
 type Project = {
   n: string;
@@ -203,6 +204,19 @@ type Tab = "cuts" | "creators";
 
 export function CaseStudies() {
   const [playing, setPlaying] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!playing) return;
+    openVideoModal();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPlaying(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      closeVideoModal();
+    };
+  }, [playing]);
   const [tab, setTab] = useState<Tab>("cuts");
 
   return (
