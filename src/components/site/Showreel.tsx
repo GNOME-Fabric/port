@@ -1,12 +1,52 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import posterImg from "@/assets/showreel-poster.jpg";
 import { useReveal } from "@/hooks/use-reveal";
+import {
+  closeVideoModal,
+  openVideoModal,
+  useAnyVideoModalOpen,
+} from "@/lib/modal-state";
 
 const REEL_YT_ID = "o_SwaTpc0VQ";
 
 export function Showreel() {
   const [open, setOpen] = useState(false);
   const ref = useReveal<HTMLDivElement>();
+  const previewWrapRef = useRef<HTMLDivElement | null>(null);
+  const [previewInView, setPreviewInView] = useState(false);
+  const anyModalOpen = useAnyVideoModalOpen();
+
+  // Only mount the muted preview iframe when the hero is on screen AND no
+  // fullscreen video modal is currently playing — keeps a single YT decoder
+  // active at a time.
+  useEffect(() => {
+    const el = previewWrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setPreviewInView(entry.isIntersecting),
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      openVideoModal();
+      return () => closeVideoModal();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const showPreview = previewInView && !anyModalOpen;
 
   return (
     <section id="showreel" className="pb-24">
