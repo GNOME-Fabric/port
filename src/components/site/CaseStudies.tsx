@@ -209,7 +209,7 @@ export function CaseStudies() {
     <section id="work" className="py-24 bg-surface/10 border-y border-border">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center gap-4 mb-10">
-          <h2 className="font-heading text-4xl text-foreground">Case Studies</h2>
+          <h2 className="font-heading text-4xl text-foreground text-glow">Case Studies</h2>
           <div className="h-px flex-1 bg-border" />
           <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
             {tab === "cuts" ? "Selected 04 / 04" : `Creator Cuts ${CREATOR_CUTS.length} / ${CREATOR_CUTS.length}`}
