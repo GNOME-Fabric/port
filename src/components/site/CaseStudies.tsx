@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useReveal } from "@/hooks/use-reveal";
+import { closeVideoModal, openVideoModal } from "@/lib/modal-state";
 
 type Project = {
   n: string;
