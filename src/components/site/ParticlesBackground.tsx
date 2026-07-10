@@ -188,26 +188,33 @@ export function ParticlesBackground() {
   }, []);
 
   return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-    >
-      {/* Layered ambient glows */}
+    <>
+      {/* Ambient glow wash — sits behind content */}
       <div
-        className="absolute -top-1/3 left-1/2 -translate-x-1/2 w-[1400px] h-[1400px] rounded-full opacity-[0.10] blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, var(--accent-color) 0%, transparent 60%)",
-        }}
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      >
+        <div
+          className="absolute -top-1/3 left-1/2 -translate-x-1/2 w-[1400px] h-[1400px] rounded-full opacity-[0.10] blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, var(--accent-color) 0%, transparent 60%)",
+          }}
+        />
+        <div
+          className="absolute bottom-[-20%] left-[-10%] w-[900px] h-[900px] rounded-full opacity-[0.06] blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, var(--bright) 0%, transparent 65%)",
+          }}
+        />
+      </div>
+      {/* Dust canvas — floats above content but never intercepts input */}
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 w-full h-full z-[60]"
       />
-      <div
-        className="absolute bottom-[-20%] left-[-10%] w-[900px] h-[900px] rounded-full opacity-[0.06] blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, var(--bright) 0%, transparent 65%)",
-        }}
-      />
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
-    </div>
+    </>
   );
 }
