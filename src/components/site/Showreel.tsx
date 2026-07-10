@@ -81,14 +81,40 @@ export function Showreel() {
                 and no fullscreen modal is playing (keeps one YT decoder max) */}
             {showPreview && (
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${REEL_YT_ID}&cc_load_policy=0&hl=en&color=white`}
+                ref={(el) => {
+                  if (!el) return;
+                  const onMessage = (e: MessageEvent) => {
+                    if (e.source !== el.contentWindow) return;
+                    try {
+                      const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+                      if (data?.event === "onReady") {
+                        el.contentWindow?.postMessage('{"event":"listening"}', "*");
+                      }
+                      if (data?.event === "onStateChange" && data?.info === 0) {
+                        el.contentWindow?.postMessage(
+                          '{"event":"command","func":"seekTo","args":[0,true]}',
+                          "*",
+                        );
+                        el.contentWindow?.postMessage(
+                          '{"event":"command","func":"playVideo","args":[]}',
+                          "*",
+                        );
+                      }
+                    } catch {}
+                  };
+                  window.addEventListener("message", onMessage);
+                }}
+                src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0&cc_load_policy=0&hl=en&color=white&enablejsapi=1`}
                 title="Matsuo showreel — silent preview"
-                className="absolute inset-0 w-full h-full pointer-events-none border-0 scale-[1.25] group-hover:scale-[1.3] transition-transform duration-700"
+                className="absolute inset-0 w-full h-full pointer-events-none border-0 scale-[1.02]"
                 allow="autoplay; encrypted-media"
                 tabIndex={-1}
                 aria-hidden="true"
               />
             )}
+            {/* Masks to hide residual YT chrome (progress bar, hover UI) */}
+            <div className="absolute inset-x-0 top-0 h-[6%] bg-background pointer-events-none z-10" />
+            <div className="absolute inset-x-0 bottom-0 h-[8%] bg-background pointer-events-none z-10" />
             {/* Muted badge — top-right, above overlays */}
             <span className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/70 backdrop-blur-sm border border-accent/30 text-foreground/90 px-2.5 py-1 rounded-full text-[10px] font-medium tracking-widest uppercase">
               <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current" aria-hidden="true">
