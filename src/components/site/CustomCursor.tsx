@@ -8,16 +8,23 @@ import { useEffect, useRef, useState } from "react";
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement | null>(null);
   const ringRef = useRef<HTMLDivElement | null>(null);
-  const [enabled, setEnabled] = useState(false);
   const [hover, setHover] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [enabled, setEnabled] = useState(false);
+
+  // Detect fine pointer on mount (client only)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(pointer: fine)");
+    const update = () => setEnabled(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
 
   useEffect(() => {
-    // Skip on touch / coarse pointer devices
-    const mq = window.matchMedia("(pointer: fine)");
-    if (!mq.matches) return;
-    setEnabled(true);
+    if (!enabled) return;
     document.documentElement.classList.add("has-custom-cursor");
 
     const dot = dotRef.current;
@@ -31,7 +38,6 @@ export function CustomCursor() {
     let raf = 0;
 
     const tick = () => {
-      // Ease the ring toward the pointer for a subtle lag
       rx += (mx - rx) * 0.22;
       ry += (my - ry) * 0.22;
       dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
@@ -43,7 +49,7 @@ export function CustomCursor() {
     const onMove = (e: PointerEvent) => {
       mx = e.clientX;
       my = e.clientY;
-      if (!visible) setVisible(true);
+      setVisible(true);
     };
     const onOver = (e: PointerEvent) => {
       const t = e.target as HTMLElement | null;
@@ -71,13 +77,12 @@ export function CustomCursor() {
       document.removeEventListener("pointerenter", onEnter);
       document.documentElement.classList.remove("has-custom-cursor");
     };
-  }, [visible]);
+  }, [enabled]);
 
   if (!enabled) return null;
 
   return (
     <>
-      {/* Center dot */}
       <div
         ref={dotRef}
         aria-hidden="true"
@@ -95,7 +100,6 @@ export function CustomCursor() {
         />
       </div>
 
-      {/* Reticle ring with tick marks */}
       <div
         ref={ringRef}
         aria-hidden="true"
@@ -120,7 +124,6 @@ export function CustomCursor() {
             strokeOpacity={hover ? 0.95 : 0.55}
             strokeWidth={hover ? 1.4 : 1}
           />
-          {/* Tick marks at N/S/E/W */}
           <g stroke="var(--accent-color)" strokeWidth="1" strokeOpacity={hover ? 0.9 : 0.6}>
             <line x1="28" y1="1" x2="28" y2="6" />
             <line x1="28" y1="50" x2="28" y2="55" />
