@@ -104,7 +104,8 @@ function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
           File ID: {p.fileId}
         </span>
       </div>
-      <div className="w-full aspect-video bg-surface border border-border rounded-md overflow-hidden relative">
+      <div className="w-full aspect-video bg-surface border border-border rounded-md overflow-hidden relative transition-all duration-500 group-hover:shadow-glow group-hover:border-accent/40">
+
         <img
           src={YT(p.ytId)}
           alt={p.title}
