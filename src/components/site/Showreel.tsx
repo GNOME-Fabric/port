@@ -14,11 +14,8 @@ const REEL_YT_ID = "o_SwaTpc0VQ";
 export function Showreel() {
   const [open, setOpen] = useState(false);
   const ref = useReveal<HTMLDivElement>();
-
-export function Showreel() {
-  const [open, setOpen] = useState(false);
-  const ref = useReveal<HTMLDivElement>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
 
   useEffect(() => {
     if (open) {
