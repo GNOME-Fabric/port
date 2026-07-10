@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
           <div>
-            <h2 className="font-heading text-5xl md:text-6xl text-foreground mb-6">
+            <h2 className="font-heading text-5xl md:text-6xl text-foreground text-glow mb-6">
               Start the Render
             </h2>
             <p className="text-muted-foreground max-w-[42ch] text-xs mb-8 uppercase tracking-widest">
