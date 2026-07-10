@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import posterImg from "@/assets/showreel-poster.jpg";
 import { useReveal } from "@/hooks/use-reveal";
 import {
@@ -12,23 +12,7 @@ const REEL_YT_ID = "o_SwaTpc0VQ";
 export function Showreel() {
   const [open, setOpen] = useState(false);
   const ref = useReveal<HTMLDivElement>();
-  const previewWrapRef = useRef<HTMLDivElement | null>(null);
-  const [previewInView, setPreviewInView] = useState(false);
   const anyModalOpen = useAnyVideoModalOpen();
-
-  // Only mount the muted preview iframe when the hero is on screen AND no
-  // fullscreen video modal is currently playing — keeps a single YT decoder
-  // active at a time.
-  useEffect(() => {
-    const el = previewWrapRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setPreviewInView(entry.isIntersecting),
-      { threshold: 0.15 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
 
   useEffect(() => {
     if (open) {
@@ -46,7 +30,10 @@ export function Showreel() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const showPreview = previewInView && !anyModalOpen;
+  // Preview loops continuously; only pauses (unmounts) when a fullscreen
+  // video modal is playing so the highlighted video stays smooth.
+  const showPreview = !anyModalOpen;
+
 
   return (
     <section id="showreel" className="pb-24">
@@ -70,7 +57,7 @@ export function Showreel() {
         </div>
 
         {/* Main Reel Interactive Element */}
-        <div ref={previewWrapRef} className="relative group cursor-pointer">
+        <div className="relative group cursor-pointer">
           {/* Outer Border Scaffolding */}
           <div className="absolute -inset-2 border border-accent/10 pointer-events-none group-hover:border-accent/30 transition-colors duration-500" />
           {/* Corner Brackets */}
