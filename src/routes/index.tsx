@@ -10,16 +10,16 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Matsuo — Video Editor · Business, Educational & Motion" },
+      { title: "Matsuo — Video Editor" },
       {
         name: "description",
         content:
-          "Portfolio of Matsuo — video editor making complex ideas impossible to skip. Long-form YouTube business & educational, motion design, gaming short-form.",
+          "Portfolio of Matsuo",
       },
       { property: "og:title", content: "Matsuo — Video Editor" },
       {
         property: "og:description",
-        content: "Making complex ideas impossible to skip. Selected work & showreel.",
+        content: "Portfolio of Matsuo",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
