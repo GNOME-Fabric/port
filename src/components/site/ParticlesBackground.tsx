@@ -148,6 +148,9 @@ export function ParticlesBackground() {
     resize();
     frame();
 
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(document.body);
+
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
@@ -157,6 +160,7 @@ export function ParticlesBackground() {
     return () => {
       cancelAnimationFrame(rafId);
       unsub();
+      ro.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
@@ -169,7 +173,7 @@ export function ParticlesBackground() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 w-full h-full"
+      className="pointer-events-none absolute top-0 left-0 w-full"
       style={{ zIndex: 1, opacity: 0.85 }}
     />
   );
