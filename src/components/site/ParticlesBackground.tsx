@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 import { getAnyVideoModalOpen, subscribeVideoModal } from "@/lib/modal-state";
 
 /**
- * Subtle ambient dust field — sits behind the content, low opacity, small dots.
- * Autonomous drift + soft pointer push with inertia. No heavy glow.
+ * Film-scan particle field: small mint/white specks plus a few faint vertical
+ * scratches. Intentionally simple and higher contrast than the previous pass.
  */
 export function ParticlesBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -15,30 +15,24 @@ export function ParticlesBackground() {
     if (!ctx) return;
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
     let width = 0;
     let height = 0;
     let raf = 0;
     let running = true;
     let paused = getAnyVideoModalOpen();
-    let t = 0;
+    let last = performance.now();
 
-    const pointer = { x: -9999, y: -9999, px: -9999, py: -9999, active: false };
+    const pointer = { x: -9999, y: -9999, active: false };
 
-    type P = {
-      x: number; y: number;
-      vx: number; vy: number;
-      r: number;
-      baseA: number;
-      a: number;
-      phase: number;
-      driftX: number; driftY: number;
-    };
+    type P = { x: number; y: number; vx: number; vy: number; r: number; a: number; tint: number };
+    type Scratch = { x: number; y: number; h: number; speed: number; a: number };
     let particles: P[] = [];
+    let scratches: Scratch[] = [];
 
-    const density = prefersReduced ? 0 : 0.00014;
-    const maxParticles = 140;
+    const density = prefersReduced ? 0 : 0.00022;
+    const maxParticles = 220;
 
     const resize = () => {
       width = window.innerWidth;
@@ -53,14 +47,18 @@ export function ParticlesBackground() {
       particles = new Array(count).fill(0).map(() => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.05,
-        vy: (Math.random() - 0.5) * 0.05,
-        r: Math.random() * 1.1 + 0.4,
-        baseA: 0.35 + Math.random() * 0.35,
-        a: 0,
-        phase: Math.random() * Math.PI * 2,
-        driftX: (Math.random() - 0.5) * 0.02,
-        driftY: (Math.random() - 0.5) * 0.02,
+        vx: (Math.random() - 0.5) * 0.045,
+        vy: 0.08 + Math.random() * 0.18,
+        r: Math.random() > 0.86 ? 1.45 : 0.75 + Math.random() * 0.55,
+        a: 0.34 + Math.random() * 0.28,
+        tint: Math.random(),
+      }));
+      scratches = new Array(Math.max(4, Math.floor(width / 340))).fill(0).map(() => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        h: 80 + Math.random() * 220,
+        speed: 0.06 + Math.random() * 0.12,
+        a: 0.05 + Math.random() * 0.05,
       }));
     };
 
@@ -79,61 +77,77 @@ export function ParticlesBackground() {
       if (running) raf = requestAnimationFrame(tick);
     };
 
-    const tick = () => {
-      if (!running || paused) return;
-      t += 0.008;
-
-      const pvx = pointer.x - pointer.px;
-      const pvy = pointer.y - pointer.py;
-      pointer.px = pointer.x;
-      pointer.py = pointer.y;
-
+    const drawFrame = () => {
       ctx.clearRect(0, 0, width, height);
 
-      const R = 120;
-      const R2 = R * R;
+      ctx.globalCompositeOperation = "screen";
+
+      for (const s of scratches) {
+        const gradient = ctx.createLinearGradient(s.x, s.y, s.x, s.y + s.h);
+        gradient.addColorStop(0, `rgba(115, 255, 184, 0)`);
+        gradient.addColorStop(0.5, `rgba(115, 255, 184, ${s.a})`);
+        gradient.addColorStop(1, `rgba(115, 255, 184, 0)`);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x, s.y + s.h);
+        ctx.stroke();
+      }
 
       for (const p of particles) {
-        // autonomous drift
-        p.vx += Math.sin(t * 0.7 + p.phase) * 0.002 + p.driftX * 0.02;
-        p.vy += Math.cos(t * 0.6 + p.phase * 1.3) * 0.002 + p.driftY * 0.02;
-
-        // soft pointer push (imparts velocity, inertia carries it)
-        if (pointer.active) {
-          const dx = p.x - pointer.x;
-          const dy = p.y - pointer.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < R2) {
-            const d = Math.sqrt(d2) + 0.01;
-            const f = (1 - d / R) * 0.28;
-            p.vx += (dx / d) * f + pvx * 0.003 * (1 - d / R);
-            p.vy += (dy / d) * f + pvy * 0.003 * (1 - d / R);
-          }
-        }
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // friction preserves gentle inertia
-        p.vx *= 0.96;
-        p.vy *= 0.96;
-
-        // wrap around viewport
-        if (p.x < -10) p.x = width + 10;
-        if (p.x > width + 10) p.x = -10;
-        if (p.y < -10) p.y = height + 10;
-        if (p.y > height + 10) p.y = -10;
-
-        // subtle twinkle
-        const twinkle = 0.7 + Math.sin(t * 1.6 + p.phase) * 0.3;
-        p.a = p.baseA * twinkle;
-
-        // small soft dot — minimal glow
-        ctx.fillStyle = `rgba(120, 240, 190, ${p.a})`;
+        ctx.fillStyle =
+          p.tint > 0.58
+            ? `rgba(115, 255, 184, ${p.a})`
+            : `rgba(245, 255, 250, ${p.a * 0.72})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      ctx.globalCompositeOperation = "source-over";
+    };
+
+    const tick = (now: number) => {
+      if (!running || paused) return;
+      const delta = Math.min(32, now - last);
+      last = now;
+      const step = delta / 16.67;
+
+      const R = 145;
+
+      for (const p of particles) {
+        if (pointer.active) {
+          const dx = p.x - pointer.x;
+          const dy = p.y - pointer.y;
+          const d = Math.hypot(dx, dy);
+          if (d < R) {
+            const force = (1 - d / R) * 0.06;
+            p.vx += (dx / (d || 1)) * force;
+            p.vy += (dy / (d || 1)) * force;
+          }
+        }
+
+        p.x += p.vx * step;
+        p.y += p.vy * step;
+        p.vx *= 0.985;
+        p.vy = p.vy * 0.992 + 0.003;
+
+        if (p.x < -10) p.x = width + 10;
+        if (p.x > width + 10) p.x = -10;
+        if (p.y < -10) p.y = height + 10;
+        if (p.y > height + 10) p.y = -10;
+      }
+
+      for (const s of scratches) {
+        s.y += s.speed * step;
+        if (s.y > height + 40) {
+          s.x = Math.random() * width;
+          s.y = -s.h - Math.random() * 160;
+        }
+      }
+
+      drawFrame();
 
       raf = requestAnimationFrame(tick);
     };
@@ -147,16 +161,18 @@ export function ParticlesBackground() {
     const unsub = subscribeVideoModal((open) => {
       paused = open;
       if (!paused && running && !prefersReduced) {
-        // clear frozen frame and resume
+        last = performance.now();
         ctx.clearRect(0, 0, width, height);
         raf = requestAnimationFrame(tick);
       } else if (paused) {
-        // free the canvas so a modal iframe over it composites cheaply
         ctx.clearRect(0, 0, width, height);
       }
     });
 
-    if (!prefersReduced && !paused) raf = requestAnimationFrame(tick);
+    if (!prefersReduced && !paused) {
+      drawFrame();
+      raf = requestAnimationFrame(tick);
+    }
 
     return () => {
       cancelAnimationFrame(raf);
@@ -173,7 +189,7 @@ export function ParticlesBackground() {
       ref={canvasRef}
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 w-full h-full"
-      style={{ zIndex: 1 }}
+      style={{ zIndex: 2, opacity: 0.9 }}
     />
   );
 }
