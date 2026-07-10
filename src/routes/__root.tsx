@@ -91,8 +91,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "Matsuo — Video Editor" },
       { property: "og:description", content: "Portfolio of Matsuo" },
       { name: "twitter:description", content: "Portfolio of Matsuo" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/29db8575-1ffa-45a2-a190-c1cdec75d477/id-preview-6defa6ed--f80ffe3d-d067-4095-8afd-e8b567f1b005.lovable.app-1783658846105.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/29db8575-1ffa-45a2-a190-c1cdec75d477/id-preview-6defa6ed--f80ffe3d-d067-4095-8afd-e8b567f1b005.lovable.app-1783658846105.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
