@@ -143,14 +143,35 @@
 
 @utility shadow-glow {
   box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--accent-color) 20%, transparent),
-    0 0 24px -6px color-mix(in oklab, var(--accent-color) 45%, transparent);
+    inset 0 0 0 1px color-mix(in oklab, var(--accent-color) 35%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--accent-color) 15%, transparent),
+    0 4px 20px -8px color-mix(in oklab, var(--accent-color) 55%, transparent),
+    0 0 40px -12px color-mix(in oklab, var(--bright) 40%, transparent);
 }
 
 @utility shadow-glow-soft {
-  box-shadow: 0 0 40px -12px color-mix(in oklab, var(--accent-color) 30%, transparent);
+  box-shadow:
+    0 0 30px -10px color-mix(in oklab, var(--accent-color) 40%, transparent),
+    0 0 80px -20px color-mix(in oklab, var(--bright) 25%, transparent);
+}
+
+@utility shadow-glow-intense {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--accent-color) 40%, transparent),
+    0 0 20px -2px color-mix(in oklab, var(--accent-color) 55%, transparent),
+    0 0 60px -8px color-mix(in oklab, var(--bright) 45%, transparent),
+    0 0 120px -20px color-mix(in oklab, var(--accent-color) 30%, transparent);
 }
 
 @utility text-glow {
-  text-shadow: 0 0 18px color-mix(in oklab, var(--accent-color) 35%, transparent);
+  text-shadow:
+    0 0 12px color-mix(in oklab, var(--accent-color) 30%, transparent),
+    0 0 32px color-mix(in oklab, var(--bright) 18%, transparent);
 }
+
+@utility text-glow-accent {
+  text-shadow:
+    0 0 8px color-mix(in oklab, var(--accent-color) 55%, transparent),
+    0 0 24px color-mix(in oklab, var(--accent-color) 30%, transparent);
+}
+
