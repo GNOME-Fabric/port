@@ -1,20 +1,19 @@
 import { useReveal } from "@/hooks/use-reveal";
 
-// TODO: swap placeholder testimonials with real client quotes and attributions
 const QUOTES = [
   {
     n: "01",
     quote:
-      "Matsuo finds the rhythm in raw footage that others miss. Average view duration jumped 20% in the first month.",
-    name: "Client Name",
-    role: "Role, Company",
+      "Great editor! Incredibly fast turnaround, quick communication and super receptive to feedback.",
+    name: "Anthony C.",
+    role: "Content Creator",
   },
   {
     n: "02",
     quote:
-      "A master of retention. The technical precision and data-backed approach to editing make him invaluable to our pipeline.",
-    name: "Client Name",
-    role: "Role, Company",
+      "Working with Mateus has been awesome! He's reliable and consistently delivers high-quality work. Definitely partnering up again for future projects!",
+    name: "Luiza V.",
+    role: "Content Creator",
   },
 ];
 
@@ -26,7 +25,7 @@ function Quote({ q }: { q: (typeof QUOTES)[number] }) {
         {q.n}
       </span>
       <blockquote className="text-xl md:text-2xl font-medium text-foreground/90 mb-6 leading-relaxed relative">
-        {q.quote}
+        “{q.quote}”
       </blockquote>
       <div className="flex items-center gap-3">
         <div className="size-10 rounded-full bg-surface border border-border" />
