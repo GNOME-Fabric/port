@@ -1,6 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReveal } from "@/hooks/use-reveal";
-import { closeVideoModal, openVideoModal } from "@/lib/modal-state";
+import {
+  closeVideoModal,
+  getAnyVideoModalOpen,
+  openVideoModal,
+  subscribeVideoModal,
+} from "@/lib/modal-state";
 import previewVideo from "@/assets/showreel-preview.mp4.asset.json";
 
 const REEL_YT_ID = "o_SwaTpc0VQ";
