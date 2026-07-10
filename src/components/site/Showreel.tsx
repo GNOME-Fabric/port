@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useReveal } from "@/hooks/use-reveal";
 import { closeVideoModal, openVideoModal } from "@/lib/modal-state";
+import previewVideo from "@/assets/showreel-preview.mp4.asset.json";
 
 const REEL_YT_ID = "o_SwaTpc0VQ";
-// Skip past the first seconds where YouTube's title/nav chrome fades out.
-const PREVIEW_START = 4;
+
 
 export function Showreel() {
   const [open, setOpen] = useState(false);
