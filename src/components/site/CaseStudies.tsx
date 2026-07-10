@@ -18,6 +18,7 @@ type CreatorCut = {
   ytId: string;
   title: string;
   format: "SHORT" | "LONG";
+  views: string;
 };
 
 const YT = (id: string) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
@@ -81,11 +82,11 @@ const BADGE: Record<string, string> = {
 };
 
 const CREATOR_CUTS: CreatorCut[] = [
-  { n: "05", ytId: "fUHbwtS3Xbg", title: "Creator Short — Cut A", format: "SHORT" },
-  { n: "06", ytId: "1VY6riUQHd8", title: "Creator Short — Cut B", format: "SHORT" },
-  { n: "07", ytId: "yxAgdK6P3Ws", title: "Long-form Feature — Ep. 01", format: "LONG" },
-  { n: "08", ytId: "4BVeqHoqk0E", title: "Long-form Feature — Ep. 02", format: "LONG" },
-  { n: "09", ytId: "vPvFLXpONDU", title: "Long-form Feature — Ep. 03", format: "LONG" },
+  { n: "05", ytId: "fUHbwtS3Xbg", title: "Creator Short — Cut A", format: "SHORT", views: "1.9M" },
+  { n: "06", ytId: "1VY6riUQHd8", title: "Creator Short — Cut B", format: "SHORT", views: "2M" },
+  { n: "07", ytId: "yxAgdK6P3Ws", title: "Long-form Feature — Ep. 01", format: "LONG", views: "100K" },
+  { n: "08", ytId: "4BVeqHoqk0E", title: "Long-form Feature — Ep. 02", format: "LONG", views: "50K" },
+  { n: "09", ytId: "vPvFLXpONDU", title: "Long-form Feature — Ep. 03", format: "LONG", views: "10K" },
 ];
 
 function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
@@ -161,7 +162,7 @@ function CutCard({ c, onPlay }: { c: CreatorCut; onPlay: (id: string) => void })
       <div className="flex justify-between items-end border-b border-border pb-2 mb-3">
         <span className="font-heading text-lg text-accent">{c.n}</span>
         <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-          {c.format}
+          {c.format} · <span className="text-bright">{c.views} views</span>
         </span>
       </div>
       <div className="w-full aspect-video bg-surface border border-border rounded-md overflow-hidden relative">
