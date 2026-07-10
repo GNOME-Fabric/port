@@ -41,7 +41,7 @@ export function Showreel() {
             type="button"
             onClick={() => setOpen(true)}
             aria-label="Play showreel"
-            className="relative aspect-video w-full block overflow-hidden bg-surface shadow-2xl"
+            className="relative aspect-video w-full block overflow-hidden bg-surface shadow-glow-intense transition-shadow duration-500"
           >
             {/* Poster fallback beneath iframe */}
             <img

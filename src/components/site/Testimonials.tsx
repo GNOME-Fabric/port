@@ -36,7 +36,7 @@ function Quote({ q }: { q: (typeof QUOTES)[number] }) {
           src={q.avatar}
           alt={q.name}
           loading="lazy"
-          className="size-10 rounded-full object-cover border border-border bg-surface"
+          className="size-10 rounded-full object-cover border border-accent/30 bg-surface shadow-glow-soft"
         />
         <div>
           <div className="text-sm font-semibold text-bright">{q.name}</div>
