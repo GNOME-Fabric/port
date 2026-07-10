@@ -39,7 +39,11 @@ export function ParticlesBackground() {
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
-      height = window.innerHeight;
+      height = Math.max(
+        document.documentElement.scrollHeight,
+        document.body?.scrollHeight ?? 0,
+        window.innerHeight,
+      );
       canvas!.width = Math.floor(width * dpr);
       canvas!.height = Math.floor(height * dpr);
       canvas!.style.width = width + "px";
@@ -47,7 +51,7 @@ export function ParticlesBackground() {
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // density based on area, capped
-      const target = Math.min(110, Math.floor((width * height) / 22000));
+      const target = Math.min(260, Math.floor((width * height) / 22000));
       if (particles.length === 0) {
         particles = new Array(target).fill(0).map(() => spawn());
       } else if (particles.length < target) {
