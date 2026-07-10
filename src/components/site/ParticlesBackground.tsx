@@ -21,6 +21,7 @@ export function ParticlesBackground() {
     let height = 0;
     let raf = 0;
     let running = true;
+    let paused = getAnyVideoModalOpen();
     let t = 0;
 
     const pointer = { x: -9999, y: -9999, px: -9999, py: -9999, active: false };
