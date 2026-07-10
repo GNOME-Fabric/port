@@ -82,11 +82,11 @@ const BADGE: Record<string, string> = {
 };
 
 const CREATOR_CUTS: CreatorCut[] = [
-  { n: "05", ytId: "fUHbwtS3Xbg", title: "Creator Short — Cut A", format: "SHORT" },
-  { n: "06", ytId: "1VY6riUQHd8", title: "Creator Short — Cut B", format: "SHORT" },
-  { n: "07", ytId: "yxAgdK6P3Ws", title: "Long-form Feature — Ep. 01", format: "LONG" },
-  { n: "08", ytId: "4BVeqHoqk0E", title: "Long-form Feature — Ep. 02", format: "LONG" },
-  { n: "09", ytId: "vPvFLXpONDU", title: "Long-form Feature — Ep. 03", format: "LONG" },
+  { n: "05", ytId: "fUHbwtS3Xbg", title: "Creator Short — Cut A", format: "SHORT", views: "1.9M" },
+  { n: "06", ytId: "1VY6riUQHd8", title: "Creator Short — Cut B", format: "SHORT", views: "2M" },
+  { n: "07", ytId: "yxAgdK6P3Ws", title: "Long-form Feature — Ep. 01", format: "LONG", views: "100K" },
+  { n: "08", ytId: "4BVeqHoqk0E", title: "Long-form Feature — Ep. 02", format: "LONG", views: "50K" },
+  { n: "09", ytId: "vPvFLXpONDU", title: "Long-form Feature — Ep. 03", format: "LONG", views: "10K" },
 ];
 
 function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
