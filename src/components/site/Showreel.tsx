@@ -68,32 +68,20 @@ export function Showreel() {
             </span>
 
             {/* Editorial Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
 
-            {/* Center Play UI */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="relative">
-                <h2
-                  className="font-heading text-[8rem] sm:text-[12rem] md:text-[16rem] leading-none text-transparent select-none group-hover:text-accent/90 transition-all duration-500"
-                  style={{ WebkitTextStroke: "1px color-mix(in oklab, var(--accent) 40%, transparent)" }}
+            {/* Minimal Play UI */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border border-accent/60 flex items-center justify-center bg-background/30 backdrop-blur-sm shadow-glow-soft group-hover:scale-110 group-hover:bg-accent/90 group-hover:border-accent transition-all duration-300">
+                <svg
+                  className="w-5 h-5 md:w-6 md:h-6 text-accent group-hover:text-accent-foreground fill-current translate-x-[2px] transition-colors"
+                  viewBox="0 0 24 24"
                 >
-                  REEL
-                </h2>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-accent flex items-center justify-center bg-background/40 backdrop-blur-sm group-hover:scale-110 group-hover:bg-accent transition-all duration-300">
-                    <svg
-                      className="w-8 h-8 md:w-10 md:h-10 text-accent group-hover:text-accent-foreground fill-current translate-x-1 transition-colors"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
+                  <path d="M8 5v14l11-7z" />
+                </svg>
               </div>
-              <p className="mt-4 text-foreground uppercase tracking-[0.4em] text-sm font-semibold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                Initialize Playback
-              </p>
             </div>
+
 
             {/* Scanning Line Effect */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
