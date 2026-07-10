@@ -144,7 +144,19 @@ export function ParticlesBackground() {
     window.addEventListener("pointerleave", onLeave);
     document.addEventListener("visibilitychange", onVisibility);
 
-    if (!prefersReduced) raf = requestAnimationFrame(tick);
+    const unsub = subscribeVideoModal((open) => {
+      paused = open;
+      if (!paused && running && !prefersReduced) {
+        // clear frozen frame and resume
+        ctx.clearRect(0, 0, width, height);
+        raf = requestAnimationFrame(tick);
+      } else if (paused) {
+        // free the canvas so a modal iframe over it composites cheaply
+        ctx.clearRect(0, 0, width, height);
+      }
+    });
+
+    if (!prefersReduced && !paused) raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
@@ -152,6 +164,7 @@ export function ParticlesBackground() {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
       document.removeEventListener("visibilitychange", onVisibility);
+      unsub();
     };
   }, []);
 
