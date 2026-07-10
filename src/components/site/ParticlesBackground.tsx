@@ -73,8 +73,8 @@ export function ParticlesBackground() {
     }
 
     function onMove(e: MouseEvent) {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      mouse.x = e.clientX + window.scrollX;
+      mouse.y = e.clientY + window.scrollY;
       mouse.active = true;
     }
     function onLeave() {
@@ -84,8 +84,8 @@ export function ParticlesBackground() {
     }
     function onTouch(e: TouchEvent) {
       if (e.touches[0]) {
-        mouse.x = e.touches[0].clientX;
-        mouse.y = e.touches[0].clientY;
+        mouse.x = e.touches[0].clientX + window.scrollX;
+        mouse.y = e.touches[0].clientY + window.scrollY;
         mouse.active = true;
       }
     }
