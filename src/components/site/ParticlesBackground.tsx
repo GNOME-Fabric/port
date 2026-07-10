@@ -39,7 +39,11 @@ export function ParticlesBackground() {
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
-      height = window.innerHeight;
+      height = Math.max(
+        document.documentElement.scrollHeight,
+        document.body?.scrollHeight ?? 0,
+        window.innerHeight,
+      );
       canvas!.width = Math.floor(width * dpr);
       canvas!.height = Math.floor(height * dpr);
       canvas!.style.width = width + "px";
@@ -47,7 +51,7 @@ export function ParticlesBackground() {
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // density based on area, capped
-      const target = Math.min(110, Math.floor((width * height) / 22000));
+      const target = Math.min(260, Math.floor((width * height) / 22000));
       if (particles.length === 0) {
         particles = new Array(target).fill(0).map(() => spawn());
       } else if (particles.length < target) {
@@ -69,8 +73,8 @@ export function ParticlesBackground() {
     }
 
     function onMove(e: MouseEvent) {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      mouse.x = e.clientX + window.scrollX;
+      mouse.y = e.clientY + window.scrollY;
       mouse.active = true;
     }
     function onLeave() {
@@ -80,8 +84,8 @@ export function ParticlesBackground() {
     }
     function onTouch(e: TouchEvent) {
       if (e.touches[0]) {
-        mouse.x = e.touches[0].clientX;
-        mouse.y = e.touches[0].clientY;
+        mouse.x = e.touches[0].clientX + window.scrollX;
+        mouse.y = e.touches[0].clientY + window.scrollY;
         mouse.active = true;
       }
     }
@@ -144,6 +148,9 @@ export function ParticlesBackground() {
     resize();
     frame();
 
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(document.body);
+
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
@@ -153,6 +160,7 @@ export function ParticlesBackground() {
     return () => {
       cancelAnimationFrame(rafId);
       unsub();
+      ro.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
@@ -165,7 +173,7 @@ export function ParticlesBackground() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 w-full h-full"
+      className="pointer-events-none absolute top-0 left-0 w-full"
       style={{ zIndex: 1, opacity: 0.85 }}
     />
   );
