@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useReveal } from "@/hooks/use-reveal";
 import { closeVideoModal, openVideoModal } from "@/lib/modal-state";
+import previewVideo from "@/assets/showreel-preview.mp4.asset.json";
 
 const REEL_YT_ID = "o_SwaTpc0VQ";
-// Skip past the first seconds where YouTube's title/nav chrome fades out.
-const PREVIEW_START = 4;
+
 
 export function Showreel() {
   const [open, setOpen] = useState(false);
@@ -63,18 +63,20 @@ export function Showreel() {
             aria-label="Play showreel"
             className="relative aspect-video w-full block overflow-hidden bg-surface shadow-glow-intense transition-shadow duration-500"
           >
-            {/* Muted inline preview — always mounted so returning from the
-                fullscreen modal is instant (no reload / no poster flash).
-                Loops via loop=1 + playlist=<id>, starting past YT's intro
-                chrome so the top nav bar never shows. */}
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0&hl=en&color=white&loop=1&playlist=${REEL_YT_ID}&start=${PREVIEW_START}`}
-              title="Matsuo showreel — silent preview"
-              className="absolute inset-0 w-full h-full pointer-events-none scale-[1.35] group-hover:scale-[1.4] transition-transform duration-700"
-              allow="autoplay; encrypted-media"
-              tabIndex={-1}
+            {/* Self-hosted muted MP4 preview — no YouTube chrome, instant
+                return from modal, always mounted so it never reloads. */}
+            <video
+              src={previewVideo.url}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
               aria-hidden="true"
+              tabIndex={-1}
             />
+
 
 
 
