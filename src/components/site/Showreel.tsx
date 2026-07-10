@@ -2,7 +2,7 @@ import { useState } from "react";
 import posterImg from "@/assets/showreel-poster.jpg";
 import { useReveal } from "@/hooks/use-reveal";
 
-const REEL_DRIVE_ID = "1E7Jr-VFx5IedqVxJ2ceSmv8ccbodcMTx";
+const REEL_YT_ID = "o_SwaTpc0VQ";
 
 export function Showreel() {
   const [open, setOpen] = useState(false);
