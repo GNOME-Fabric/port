@@ -157,9 +157,9 @@ export function Showreel() {
               Close [ESC]
             </button>
             <iframe
-              src={`https://www.youtube.com/embed/${REEL_YT_ID}?autoplay=1&rel=0`}
+              src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=1&playsinline=1`}
               className="w-full h-full rounded-md border border-border"
-              allow="autoplay"
+              allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
               allowFullScreen
               title="Matsuo Showreel"
             />
