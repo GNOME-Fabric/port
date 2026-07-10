@@ -113,11 +113,6 @@ export function Showreel() {
             </div>
 
 
-            {/* Scanning Line Effect */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              <div className="w-full h-px bg-accent/20 absolute top-1/4 animate-pulse" />
-              <div className="w-full h-0.5 bg-foreground/5 absolute top-1/2" />
-            </div>
 
             {/* Bottom Data Strip */}
             <div className="absolute bottom-0 left-0 w-full p-6 flex justify-between items-center bg-gradient-to-t from-background/90 to-transparent">
