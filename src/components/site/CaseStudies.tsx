@@ -97,7 +97,7 @@ function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
       ref={ref}
       type="button"
       onClick={() => onPlay(p.ytId)}
-      className="space-y-6 block group text-left w-full"
+      className="space-y-6 group text-left w-full flex flex-col h-full"
     >
       <div className="flex justify-between items-end border-b border-border pb-2">
         <span className="font-heading text-2xl text-accent text-glow-accent">{p.n}</span>
@@ -123,13 +123,13 @@ function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
           {p.n} · {BADGE[p.n]}
         </span>
       </div>
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="flex-1">
+      <div className="flex flex-col md:flex-row gap-8 flex-1">
+        <div className="flex-1 flex flex-col">
           <h3 className="font-heading text-3xl text-foreground mb-2 group-hover:text-accent transition-colors">
             {p.title}
           </h3>
           <p className="text-muted-foreground text-sm max-w-[48ch]">{p.description}</p>
-          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mt-3">
+          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mt-auto pt-3">
             {p.category}
           </p>
         </div>
