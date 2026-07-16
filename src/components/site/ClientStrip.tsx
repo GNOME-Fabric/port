@@ -1,4 +1,5 @@
 import { Youtube } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 const CHANNELS = [
   { handle: "@RyanScribner", href: "https://www.youtube.com/@RyanScribner" },
@@ -10,6 +11,7 @@ const CHANNELS = [
 ];
 
 export function ClientStrip() {
+  const { t } = useI18n();
   return (
     <section className="py-14 border-b border-border">
       <div className="max-w-6xl mx-auto px-6">
@@ -22,7 +24,7 @@ export function ClientStrip() {
               aria-hidden
             />
             <h2 className="text-[10px] uppercase tracking-[0.3em] text-accent font-mono font-bold">
-              Trusted Collaborators
+              {t("clients.title")}
             </h2>
           </div>
           <div className="text-[10px] font-mono text-muted-foreground/70 tabular-nums">
