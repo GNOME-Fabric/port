@@ -64,6 +64,7 @@ const EN: Dict = {
 
   "cs.other1.title": "Edit Sample — A",
   "cs.other2.title": "Edit Sample — B",
+  "cs.other3.title": "Edit Sample — Short",
   "cs.otherLabel": "Editing sample cutdown.",
 
   "clients.title": "Trusted Collaborators",
@@ -140,6 +141,7 @@ const PT: Dict = {
 
   "cs.other1.title": "Amostra de Edição — A",
   "cs.other2.title": "Amostra de Edição — B",
+  "cs.other3.title": "Amostra de Edição — Short",
   "cs.otherLabel": "Recorte de amostra de edição.",
 
   "clients.title": "Colaboradores de Confiança",

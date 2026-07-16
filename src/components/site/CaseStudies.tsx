@@ -50,6 +50,7 @@ const CREATOR_CUTS: CreatorCut[] = [
 const OTHER_CASES: OtherCase[] = [
   { n: "10", ytId: "oQIrNjYnyB0", titleKey: "cs.other1.title" },
   { n: "11", ytId: "oqIs5NEeXaY", titleKey: "cs.other2.title" },
+  { n: "12", ytId: "Xa-NBbYdWxA", titleKey: "cs.other3.title" },
 ];
 
 function Entry({ p, onPlay }: { p: Project; onPlay: (id: string) => void }) {
