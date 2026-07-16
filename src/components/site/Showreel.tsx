@@ -7,11 +7,13 @@ import {
   subscribeVideoModal,
 } from "@/lib/modal-state";
 import previewVideo from "@/assets/showreel-preview.mp4.asset.json";
+import { useI18n } from "@/lib/i18n";
 
 const REEL_YT_ID = "o_SwaTpc0VQ";
 
 
 export function Showreel() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useReveal<HTMLDivElement>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -88,16 +90,16 @@ export function Showreel() {
         <div className="flex justify-between items-end mb-4 text-[10px] font-medium uppercase tracking-[0.2em] text-accent/60">
           <div className="flex gap-6">
             <div className="flex flex-col">
-              <span className="text-accent">Project ID</span>
+              <span className="text-accent">{t("reel.projectId")}</span>
               <span className="text-foreground">MT-SR-2026-V1</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-accent">Codec</span>
+              <span className="text-accent">{t("reel.codec")}</span>
               <span className="text-foreground">ProRes 422 HQ</span>
             </div>
           </div>
           <div className="text-right flex flex-col items-end">
-            <span className="text-accent">Global Timecode</span>
+            <span className="text-accent">{t("reel.globalTc")}</span>
             <span className="text-foreground text-sm tabular-nums">00:56:27</span>
           </div>
         </div>
@@ -139,7 +141,7 @@ export function Showreel() {
               <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current" aria-hidden="true">
                 <path d="M16.5 12A4.5 4.5 0 0014 8v2.18l2.45 2.45a4.22 4.22 0 00.05-.63zM19 12c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.94 8.94 0 0021 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
               </svg>
-              Muted · click for sound
+              {t("reel.muted")}
             </span>
 
             {/* Editorial Overlays */}
@@ -183,15 +185,15 @@ export function Showreel() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-accent/10 pt-4">
           <div>
             <p className="text-accent text-xs font-semibold mb-1 uppercase tracking-widest">
-              Technical Overview
+              {t("reel.overview")}
             </p>
             <p className="text-foreground/60 text-[11px] leading-relaxed uppercase tracking-wider">
-              Rhythmic editorial precision, motion design, and color science across educational, finance, and short-form work.
+              {t("reel.overviewBody")}
             </p>
           </div>
           <div className="md:border-l border-accent/10 md:pl-8">
             <p className="text-accent text-xs font-semibold mb-1 uppercase tracking-widest">
-              Software Stack
+              {t("reel.stack")}
             </p>
             <p className="text-foreground/60 text-[11px] uppercase tracking-tighter font-mono">
               PR / AE / DAVINCI RESOLVE / ILLUSTRATOR
@@ -199,10 +201,10 @@ export function Showreel() {
           </div>
           <div className="md:text-right">
             <p className="text-accent text-xs font-semibold mb-1 uppercase tracking-widest">
-              Current Status
+              {t("reel.status")}
             </p>
             <p className="text-bright text-xs font-bold uppercase">
-              Available for projects 2026
+              {t("reel.statusBody")}
             </p>
           </div>
         </div>
@@ -224,7 +226,7 @@ export function Showreel() {
               onClick={() => setOpen(false)}
               className="absolute -top-10 right-0 text-xs tracking-widest uppercase text-muted-foreground hover:text-accent transition-colors"
             >
-              Close [ESC]
+              {t("reel.close")}
             </button>
             <iframe
               src={`https://www.youtube-nocookie.com/embed/${REEL_YT_ID}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`}

@@ -1,35 +1,25 @@
 import { useReveal } from "@/hooks/use-reveal";
 import anthonyAvatar from "@/assets/anthony-avatar.png.asset.json";
 import luizaAvatar from "@/assets/luiza-avatar.jpg.asset.json";
+import { useI18n } from "@/lib/i18n";
 
-const QUOTES = [
-  {
-    n: "01",
-    quote:
-      "Great editor! Incredibly fast turnaround, quick communication and super receptive to feedback.",
-    name: "Anthony C.",
-    role: "Content Creator",
-    avatar: anthonyAvatar.url,
-  },
-  {
-    n: "02",
-    quote:
-      "Working with Mateus has been awesome! He's reliable and consistently delivers high-quality work. Definitely partnering up again for future projects!",
-    name: "Luiza V.",
-    role: "Content Creator",
-    avatar: luizaAvatar.url,
-  },
+type Q = { n: string; quoteKey: string; name: string; roleKey: string; avatar: string };
+
+const QUOTES: Q[] = [
+  { n: "01", quoteKey: "test.q1", name: "Anthony C.", roleKey: "test.r1", avatar: anthonyAvatar.url },
+  { n: "02", quoteKey: "test.q2", name: "Luiza V.", roleKey: "test.r2", avatar: luizaAvatar.url },
 ];
 
-function Quote({ q }: { q: (typeof QUOTES)[number] }) {
+function Quote({ q }: { q: Q }) {
   const ref = useReveal<HTMLDivElement>();
+  const { t } = useI18n();
   return (
     <div ref={ref} className="relative">
       <span className="absolute -top-10 left-0 text-8xl font-heading text-foreground/5 select-none">
         {q.n}
       </span>
       <blockquote className="text-xl md:text-2xl font-medium text-foreground/90 mb-6 leading-relaxed relative">
-        “{q.quote}”
+        “{t(q.quoteKey)}”
       </blockquote>
       <div className="flex items-center gap-3">
         <img
@@ -41,7 +31,7 @@ function Quote({ q }: { q: (typeof QUOTES)[number] }) {
         <div>
           <div className="text-sm font-semibold text-bright">{q.name}</div>
           <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
-            {q.role}
+            {t(q.roleKey)}
           </div>
         </div>
       </div>
