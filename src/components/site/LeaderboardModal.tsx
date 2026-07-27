@@ -18,7 +18,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [now, setNow] = useState(() => getSessionSeconds());
-  const identity = typeof window !== "undefined" ? getIdentity() : { alias: "", secret: "" };
+  const [alias, setAlias] = useState("");
 
   useEffect(() => {
     if (!open) return;
