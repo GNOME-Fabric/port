@@ -91,6 +91,10 @@ const EN: Dict = {
   "lb.youTag": "you",
   "lb.hint": "Click the timecode to reopen",
   "lb.close": "Close",
+  "lb.liveNow": "Live now",
+  "lb.records": "All-time records",
+  "lb.noLive": "You're the only one here right now.",
+  "lb.liveCount": "online",
   "hero.tcHint": "Click for leaderboard",
 };
 
