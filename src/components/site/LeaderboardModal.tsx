@@ -22,7 +22,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
 
   useEffect(() => {
     if (!open) return;
-    setModalOpen("leaderboard", true);
+    openVideoModal();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -44,7 +44,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
       window.clearInterval(tick);
-      setModalOpen("leaderboard", false);
+      closeVideoModal();
     };
   }, [open, onClose]);
 
