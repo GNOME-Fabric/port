@@ -80,7 +80,7 @@ export async function recordSession(seconds: number): Promise<void> {
  * `supabase.rpc`, which uses a regular fetch the browser will cancel on unload.
  */
 export function recordSessionBeacon(seconds: number): void {
-  if (seconds < 1 || typeof window === "undefined") return;
+  if (seconds < 60 || typeof window === "undefined") return;
   if (!cached) return; // no identity resolved yet; nothing to send
   const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/record_session`;
   const apikey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
