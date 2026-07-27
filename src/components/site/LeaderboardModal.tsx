@@ -51,7 +51,29 @@ export function LeaderboardModal({ open, onClose }: Props) {
 
   if (!open) return null;
 
-  const myIndex = entries.findIndex((e) => e.alias === alias);
+  // Keep the current user's row in sync with the live "this session" counter,
+  // so the ranking never lags behind the ticker the user is watching.
+  const liveEntries = (() => {
+    if (!alias) return entries;
+    const idx = entries.findIndex((e) => e.alias === alias);
+    if (idx >= 0) {
+      const boosted = Math.max(entries[idx].longest_seconds, now);
+      const next = entries.map((e, i) =>
+        i === idx ? { ...e, longest_seconds: boosted } : e
+      );
+      next.sort((a, b) => b.longest_seconds - a.longest_seconds);
+      return next;
+    }
+    // Not in the fetched top N yet — inject a provisional row so the user sees themselves.
+    const provisional: LeaderboardEntry = {
+      alias,
+      longest_seconds: now,
+      updated_at: new Date().toISOString(),
+    };
+    return [...entries, provisional].sort((a, b) => b.longest_seconds - a.longest_seconds);
+  })();
+
+  const myIndex = liveEntries.findIndex((e) => e.alias === alias);
 
   return (
     <div
