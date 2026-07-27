@@ -1,78 +1,46 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getIpIdentity } from "@/lib/identity.functions";
 
 const STORAGE_KEY = "matsuo.leaderboard.identity";
 const BEST_KEY = "matsuo.leaderboard.best";
 
 type Identity = { alias: string; secret: string };
 
-const ADJ = [
-  "Silent",
-  "Neon",
-  "Ghost",
-  "Timecode",
-  "Retro",
-  "Analog",
-  "Chroma",
-  "Vector",
-  "Delta",
-  "Signal",
-  "Muted",
-  "Aperture",
-  "Grain",
-  "Splice",
-  "Cyan",
-  "Vapor",
-  "Static",
-  "Frame",
-  "Halo",
-  "Loop",
-];
-const NOUN = [
-  "Editor",
-  "Cutter",
-  "Ghost",
-  "Router",
-  "Signal",
-  "Cursor",
-  "Render",
-  "Scene",
-  "Layer",
-  "Buffer",
-  "Reel",
-  "Mask",
-  "Beam",
-  "Node",
-  "Pulse",
-];
+let cached: Identity | null = null;
+let inflight: Promise<Identity> | null = null;
 
-function randHex(len: number): string {
-  const bytes = new Uint8Array(len);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function generateAlias(): string {
-  return `${pick(ADJ)}${pick(NOUN)}#${randHex(2).toUpperCase()}`;
-}
-
-export function getIdentity(): Identity {
-  if (typeof window === "undefined") return { alias: "", secret: "" };
+export async function getIdentity(): Promise<Identity> {
+  if (cached) return cached;
+  if (inflight) return inflight;
+  inflight = (async () => {
+    try {
+      const id = (await getIpIdentity()) as Identity;
+      if (id?.alias && id?.secret) {
+        cached = id;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(id));
+        } catch {}
+        return id;
+      }
+    } catch {}
+    // Fallback to last cached identity so a network blip doesn't break recording.
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as Identity;
+        if (parsed?.alias && parsed?.secret) {
+          cached = parsed;
+          return parsed;
+        }
+      }
+    } catch {}
+    throw new Error("identity unavailable");
+  })();
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Identity;
-      if (parsed?.alias && parsed?.secret) return parsed;
-    }
-  } catch {}
-  const id: Identity = { alias: generateAlias(), secret: randHex(16) };
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(id));
-  } catch {}
-  return id;
+    return await inflight;
+  } finally {
+    inflight = null;
+  }
 }
 
 export function getStoredBest(): number {
@@ -92,7 +60,12 @@ export function setStoredBest(seconds: number): void {
 
 export async function recordSession(seconds: number): Promise<void> {
   if (seconds < 5) return; // skip micro sessions
-  const id = getIdentity();
+  let id: Identity;
+  try {
+    id = await getIdentity();
+  } catch {
+    return;
+  }
   await supabase.rpc("record_session", {
     _alias: id.alias,
     _secret: id.secret,
@@ -100,6 +73,7 @@ export async function recordSession(seconds: number): Promise<void> {
   });
   setStoredBest(Math.max(getStoredBest(), Math.floor(seconds)));
 }
+
 
 export type LeaderboardEntry = {
   alias: string;
