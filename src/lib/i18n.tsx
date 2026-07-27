@@ -185,6 +185,10 @@ const PT: Dict = {
   "lb.youTag": "você",
   "lb.hint": "Clique no timecode para reabrir",
   "lb.close": "Fechar",
+  "lb.liveNow": "Ao vivo agora",
+  "lb.records": "Recordes",
+  "lb.noLive": "Você é o único aqui neste momento.",
+  "lb.liveCount": "online",
   "hero.tcHint": "Clique para ver o ranking",
 };
 
