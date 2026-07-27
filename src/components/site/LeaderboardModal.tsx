@@ -9,7 +9,7 @@ import {
 } from "@/lib/leaderboard";
 import { getSessionSeconds } from "@/hooks/use-session-recorder";
 import { useI18n } from "@/lib/i18n";
-import { setModalOpen } from "@/lib/modal-state";
+import { openVideoModal, closeVideoModal } from "@/lib/modal-state";
 
 type Props = { open: boolean; onClose: () => void };
 
