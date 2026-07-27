@@ -160,7 +160,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
                   const showEllipsis =
                     liveCapped.selfBelow && i === liveCapped.visible.length - 1;
                   return (
-                    <div key={`live-wrap-${p.alias}`}>
+                    <React.Fragment key={`live-wrap-${p.alias}`}>
                       {showEllipsis && (
                         <li className="text-center text-[10px] tracking-widest text-muted-foreground/60 py-1">
                           · · ·
@@ -229,7 +229,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
                   const showEllipsis =
                     recordsCapped.selfBelow && i === recordsCapped.visible.length - 1;
                   return (
-                    <div key={`rec-wrap-${e.alias}`}>
+                    <React.Fragment key={`rec-wrap-${e.alias}`}>
                       {showEllipsis && (
                         <li className="text-center text-[10px] tracking-widest text-muted-foreground/60 py-1">
                           · · ·
