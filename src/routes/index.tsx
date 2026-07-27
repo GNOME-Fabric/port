@@ -43,6 +43,10 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   useSessionRecorder();
+  useEffect(() => {
+    startLeaderboardPolling();
+    return () => stopLeaderboardPolling();
+  }, []);
   return (
     <div className="min-h-screen text-foreground relative">
       <CustomCursor />
