@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { X, Trophy } from "lucide-react";
 import {
-  fetchLeaderboard,
   formatDuration,
   getIdentity,
   recordSession,
   type LeaderboardEntry,
 } from "@/lib/leaderboard";
 import { getSessionSeconds } from "@/hooks/use-session-recorder";
+import { useLeaderboardStore, refreshLeaderboardNow } from "@/lib/leaderboard-store";
 import { useI18n } from "@/lib/i18n";
 import { openVideoModal, closeVideoModal } from "@/lib/modal-state";
 
@@ -15,11 +15,9 @@ type Props = { open: boolean; onClose: () => void };
 
 export function LeaderboardModal({ open, onClose }: Props) {
   const { t } = useI18n();
-  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { entries, loading, nextRefresh } = useLeaderboardStore();
   const [now, setNow] = useState(() => getSessionSeconds());
   const [alias, setAlias] = useState("");
-  const [nextRefresh, setNextRefresh] = useState(60);
 
   useEffect(() => {
     if (!open) return;
@@ -28,34 +26,18 @@ export function LeaderboardModal({ open, onClose }: Props) {
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
 
-    setLoading(true);
     getIdentity().then((id) => setAlias(id.alias)).catch(() => {});
+    // Push our latest score so we appear immediately, then force a fresh fetch.
+    recordSession(getSessionSeconds())
+      .catch(() => {})
+      .finally(() => refreshLeaderboardNow());
 
-    const refresh = () => {
-      setNextRefresh(60);
-      return recordSession(getSessionSeconds())
-        .catch(() => {})
-        .finally(() => {
-          fetchLeaderboard(20)
-            .then(setEntries)
-            .catch(() => {})
-            .finally(() => setLoading(false));
-        });
-    };
-
-    refresh();
-
-    const tick = window.setInterval(() => {
-      setNow(getSessionSeconds());
-      setNextRefresh((n) => (n <= 1 ? 60 : n - 1));
-    }, 1000);
-    const poll = window.setInterval(refresh, 60000);
+    const tick = window.setInterval(() => setNow(getSessionSeconds()), 1000);
 
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
       window.clearInterval(tick);
-      window.clearInterval(poll);
       closeVideoModal();
     };
   }, [open, onClose]);
