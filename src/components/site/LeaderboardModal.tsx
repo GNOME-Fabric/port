@@ -195,7 +195,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
                           {formatDuration(p.seconds)}
                         </span>
                       </li>
-                    </div>
+                    </React.Fragment>
                   );
                 })}
               </ol>
