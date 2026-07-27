@@ -46,7 +46,11 @@ function Index() {
   useSessionRecorder();
   useEffect(() => {
     startLeaderboardPolling();
-    return () => stopLeaderboardPolling();
+    startPresence();
+    return () => {
+      stopLeaderboardPolling();
+      stopPresence();
+    };
   }, []);
   return (
     <div className="min-h-screen text-foreground relative">
