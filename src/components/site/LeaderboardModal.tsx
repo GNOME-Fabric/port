@@ -9,8 +9,21 @@ import {
 import { getSessionSeconds } from "@/hooks/use-session-recorder";
 import { useLeaderboardStore } from "@/lib/leaderboard-store";
 import { useLivePresence } from "@/lib/presence";
+import { useFlip } from "@/hooks/use-flip";
 import { useI18n } from "@/lib/i18n";
 import { openVideoModal, closeVideoModal } from "@/lib/modal-state";
+
+const TOP_N = 10;
+
+function capWithSelf<T>(list: T[], isSelf: (item: T) => boolean, n = TOP_N) {
+  if (list.length <= n) return { visible: list, selfBelow: false, selfIdx: list.findIndex(isSelf) };
+  const top = list.slice(0, n);
+  const selfIdx = list.findIndex(isSelf);
+  if (selfIdx < 0 || selfIdx < n) {
+    return { visible: top, selfBelow: false, selfIdx };
+  }
+  return { visible: [...top, list[selfIdx]], selfBelow: true, selfIdx };
+}
 
 type Props = { open: boolean; onClose: () => void };
 
