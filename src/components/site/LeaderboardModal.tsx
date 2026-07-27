@@ -150,35 +150,52 @@ export function LeaderboardModal({ open, onClose }: Props) {
                 {t("lb.noLive")}
               </div>
             ) : (
-              <ol className="space-y-1">
-                {liveList.map((p, i) => {
+              <ol ref={liveFlipRef} className="space-y-1">
+                {liveCapped.visible.map((p, i) => {
                   const isMe = p.alias === alias;
+                  const realIdx =
+                    liveCapped.selfBelow && i === liveCapped.visible.length - 1
+                      ? liveCapped.selfIdx
+                      : i;
+                  const showEllipsis =
+                    liveCapped.selfBelow && i === liveCapped.visible.length - 1;
                   return (
-                    <li
-                      key={`live-${p.alias}`}
-                      className={`flex items-center justify-between font-mono text-sm py-2 px-3 rounded ${
-                        isMe ? "bg-accent/10 text-foreground" : "text-muted-foreground"
-                      }`}
-                    >
-                      <span className="flex items-center gap-3">
-                        <span className="text-[10px] w-6 text-right opacity-60">
-                          {(i + 1).toString().padStart(2, "0")}
-                        </span>
-                        <span className="relative flex h-1.5 w-1.5">
-                          <span className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
-                          <span className="relative rounded-full h-1.5 w-1.5 bg-accent" />
-                        </span>
-                        <span className={isMe ? "text-accent" : ""}>{p.alias}</span>
-                        {isMe && (
-                          <span className="text-[9px] uppercase tracking-widest text-accent/70">
-                            {t("lb.youTag")}
+                    <div key={`live-wrap-${p.alias}`}>
+                      {showEllipsis && (
+                        <li className="text-center text-[10px] tracking-widest text-muted-foreground/60 py-1">
+                          · · ·
+                        </li>
+                      )}
+                      <li
+                        data-flip-key={p.alias}
+                        className={`flex items-center justify-between font-mono text-sm py-2 px-3 rounded will-change-transform ${
+                          isMe
+                            ? "bg-accent/15 text-foreground ring-1 ring-accent/40 shadow-[0_0_20px_-8px_hsl(var(--accent))]"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        <span className="flex items-center gap-3">
+                          <span className="text-[10px] w-6 text-right opacity-60 tabular-nums">
+                            {(realIdx + 1).toString().padStart(2, "0")}
                           </span>
-                        )}
-                      </span>
-                      <span className="tabular-nums text-foreground">
-                        {formatDuration(p.seconds)}
-                      </span>
-                    </li>
+                          <span className="relative flex h-1.5 w-1.5">
+                            <span className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
+                            <span className="relative rounded-full h-1.5 w-1.5 bg-accent" />
+                          </span>
+                          <span className={isMe ? "text-accent font-semibold" : ""}>
+                            {p.alias}
+                          </span>
+                          {isMe && (
+                            <span className="text-[9px] uppercase tracking-widest text-accent/70">
+                              {t("lb.youTag")}
+                            </span>
+                          )}
+                        </span>
+                        <span className="tabular-nums text-foreground">
+                          {formatDuration(p.seconds)}
+                        </span>
+                      </li>
+                    </div>
                   );
                 })}
               </ol>
@@ -203,25 +220,46 @@ export function LeaderboardModal({ open, onClose }: Props) {
               </div>
             ) : (
               <ol className="space-y-1">
-                {entries.map((e: LeaderboardEntry, i) => {
+                {recordsCapped.visible.map((e: LeaderboardEntry, i) => {
                   const isMe = e.alias === alias;
+                  const realIdx =
+                    recordsCapped.selfBelow && i === recordsCapped.visible.length - 1
+                      ? recordsCapped.selfIdx
+                      : i;
+                  const showEllipsis =
+                    recordsCapped.selfBelow && i === recordsCapped.visible.length - 1;
                   return (
-                    <li
-                      key={`rec-${e.alias}`}
-                      className={`flex items-center justify-between font-mono text-sm py-2 px-3 rounded ${
-                        isMe ? "bg-accent/5 text-foreground" : "text-muted-foreground"
-                      }`}
-                    >
-                      <span className="flex items-center gap-3">
-                        <span className="text-[10px] w-6 text-right opacity-60">
-                          {(i + 1).toString().padStart(2, "0")}
+                    <div key={`rec-wrap-${e.alias}`}>
+                      {showEllipsis && (
+                        <li className="text-center text-[10px] tracking-widest text-muted-foreground/60 py-1">
+                          · · ·
+                        </li>
+                      )}
+                      <li
+                        className={`flex items-center justify-between font-mono text-sm py-2 px-3 rounded ${
+                          isMe
+                            ? "bg-accent/10 text-foreground ring-1 ring-accent/30"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        <span className="flex items-center gap-3">
+                          <span className="text-[10px] w-6 text-right opacity-60 tabular-nums">
+                            {(realIdx + 1).toString().padStart(2, "0")}
+                          </span>
+                          <span className={isMe ? "text-accent font-semibold" : ""}>
+                            {e.alias}
+                          </span>
+                          {isMe && (
+                            <span className="text-[9px] uppercase tracking-widest text-accent/70">
+                              {t("lb.youTag")}
+                            </span>
+                          )}
                         </span>
-                        <span className={isMe ? "text-accent" : ""}>{e.alias}</span>
-                      </span>
-                      <span className="tabular-nums text-foreground/80">
-                        {formatDuration(e.longest_seconds)}
-                      </span>
-                    </li>
+                        <span className="tabular-nums text-foreground/80">
+                          {formatDuration(e.longest_seconds)}
+                        </span>
+                      </li>
+                    </div>
                   );
                 })}
               </ol>
