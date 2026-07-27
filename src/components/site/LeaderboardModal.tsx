@@ -28,6 +28,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
     document.body.style.overflow = "hidden";
 
     setLoading(true);
+    getIdentity().then((id) => setAlias(id.alias)).catch(() => {});
     // Push our latest score first, then fetch, so we appear immediately.
     recordSession(getSessionSeconds())
       .catch(() => {})
