@@ -91,6 +91,10 @@ const EN: Dict = {
   "lb.youTag": "you",
   "lb.hint": "Click the timecode to reopen",
   "lb.close": "Close",
+  "lb.liveNow": "Live now",
+  "lb.records": "All-time records",
+  "lb.noLive": "You're the only one here right now.",
+  "lb.liveCount": "online",
   "hero.tcHint": "Click for leaderboard",
 };
 
@@ -181,6 +185,10 @@ const PT: Dict = {
   "lb.youTag": "você",
   "lb.hint": "Clique no timecode para reabrir",
   "lb.close": "Fechar",
+  "lb.liveNow": "Ao vivo agora",
+  "lb.records": "Recordes",
+  "lb.noLive": "Você é o único aqui neste momento.",
+  "lb.liveCount": "online",
   "hero.tcHint": "Clique para ver o ranking",
 };
 

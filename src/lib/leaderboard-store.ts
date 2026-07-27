@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { fetchLeaderboard, type LeaderboardEntry } from "@/lib/leaderboard";
 
-const REFRESH_MS = 60_000;
+// Records are the historical "hall of fame". Live tracking is handled by
+// presence.ts via WebSocket, so we only need to refresh the persisted
+// records occasionally — presence covers the real-time visualization.
+const REFRESH_MS = 120_000;
 
 type State = {
   entries: LeaderboardEntry[];
   loading: boolean;
-  nextRefresh: number; // seconds until next fetch
 };
 
-let state: State = { entries: [], loading: false, nextRefresh: 60 };
+let state: State = { entries: [], loading: false };
 const listeners = new Set<(s: State) => void>();
 let interval: number | null = null;
-let tick: number | null = null;
 let started = false;
 
 function setState(patch: Partial<State>) {
@@ -21,7 +22,7 @@ function setState(patch: Partial<State>) {
 }
 
 async function refresh() {
-  setState({ loading: true, nextRefresh: 60 });
+  setState({ loading: true });
   try {
     const entries = await fetchLeaderboard(20);
     setState({ entries, loading: false });
@@ -35,16 +36,11 @@ export function startLeaderboardPolling() {
   started = true;
   refresh();
   interval = window.setInterval(refresh, REFRESH_MS);
-  tick = window.setInterval(() => {
-    setState({ nextRefresh: state.nextRefresh <= 1 ? 60 : state.nextRefresh - 1 });
-  }, 1000);
 }
 
 export function stopLeaderboardPolling() {
   if (interval != null) window.clearInterval(interval);
-  if (tick != null) window.clearInterval(tick);
   interval = null;
-  tick = null;
   started = false;
 }
 

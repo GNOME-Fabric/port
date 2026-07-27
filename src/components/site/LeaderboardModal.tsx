@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { X, Trophy } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { X, Trophy, Radio } from "lucide-react";
 import {
   formatDuration,
   getIdentity,
@@ -8,6 +8,7 @@ import {
 } from "@/lib/leaderboard";
 import { getSessionSeconds } from "@/hooks/use-session-recorder";
 import { useLeaderboardStore } from "@/lib/leaderboard-store";
+import { useLivePresence } from "@/lib/presence";
 import { useI18n } from "@/lib/i18n";
 import { openVideoModal, closeVideoModal } from "@/lib/modal-state";
 
@@ -15,7 +16,8 @@ type Props = { open: boolean; onClose: () => void };
 
 export function LeaderboardModal({ open, onClose }: Props) {
   const { t } = useI18n();
-  const { entries, loading, nextRefresh } = useLeaderboardStore();
+  const { entries, loading } = useLeaderboardStore();
+  const liveMap = useLivePresence();
   const [now, setNow] = useState(() => getSessionSeconds());
   const [alias, setAlias] = useState("");
 
@@ -27,7 +29,6 @@ export function LeaderboardModal({ open, onClose }: Props) {
     document.body.style.overflow = "hidden";
 
     getIdentity().then((id) => setAlias(id.alias)).catch(() => {});
-    // Push our latest score in the background; the global 60s poll will pick it up.
     recordSession(getSessionSeconds()).catch(() => {});
 
     const tick = window.setInterval(() => setNow(getSessionSeconds()), 1000);
@@ -40,31 +41,24 @@ export function LeaderboardModal({ open, onClose }: Props) {
     };
   }, [open, onClose]);
 
-  if (!open) return null;
-
-  // Keep the current user's row in sync with the live "this session" counter,
-  // so the ranking never lags behind the ticker the user is watching.
-  const liveEntries = (() => {
-    if (!alias) return entries;
-    const idx = entries.findIndex((e) => e.alias === alias);
-    if (idx >= 0) {
-      const boosted = Math.max(entries[idx].longest_seconds, now);
-      const next = entries.map((e, i) =>
-        i === idx ? { ...e, longest_seconds: boosted } : e
-      );
-      next.sort((a, b) => b.longest_seconds - a.longest_seconds);
-      return next;
+  // Live list: everyone currently connected via presence, sorted by seconds desc.
+  // Force the current user's row to always reflect the local ticker (avoids any
+  // lag between our 2s presence push and the 1s ticker).
+  const liveList = useMemo(() => {
+    const list = Object.values(liveMap).map((p) =>
+      p.alias === alias ? { ...p, seconds: Math.max(p.seconds, now) } : p
+    );
+    // Ensure self appears even before the first presence sync round-trip.
+    if (alias && !list.some((p) => p.alias === alias)) {
+      list.push({ alias, seconds: now });
     }
-    // Not in the fetched top N yet — inject a provisional row so the user sees themselves.
-    const provisional: LeaderboardEntry = {
-      alias,
-      longest_seconds: now,
-      updated_at: new Date().toISOString(),
-    };
-    return [...entries, provisional].sort((a, b) => b.longest_seconds - a.longest_seconds);
-  })();
+    list.sort((a, b) => b.seconds - a.seconds);
+    return list;
+  }, [liveMap, alias, now]);
 
-  const myIndex = liveEntries.findIndex((e) => e.alias === alias);
+  const myLiveRank = liveList.findIndex((p) => p.alias === alias);
+
+  if (!open) return null;
 
   return (
     <div
@@ -112,65 +106,109 @@ export function LeaderboardModal({ open, onClose }: Props) {
           </div>
         </div>
 
-        <div className="max-h-[50vh] overflow-y-auto px-5 py-3">
-          {loading && entries.length === 0 ? (
-            <div className="text-xs text-muted-foreground py-6 text-center">{t("lb.loading")}</div>
-          ) : entries.length === 0 ? (
-            <div className="text-xs text-muted-foreground py-6 text-center">{t("lb.empty")}</div>
-          ) : (
-            <ol className="space-y-1">
-              {liveEntries.map((e, i) => {
-                const isMe = e.alias === alias;
-                return (
-                  <li
-                    key={e.alias}
-                    className={`flex items-center justify-between font-mono text-sm py-2 px-3 rounded ${
-                      isMe ? "bg-accent/10 text-foreground" : "text-muted-foreground"
-                    }`}
-                  >
-                    <span className="flex items-center gap-3">
-                      <span className="text-[10px] w-6 text-right opacity-60">
-                        {(i + 1).toString().padStart(2, "0")}
-                      </span>
-                      <span className={isMe ? "text-accent" : ""}>{e.alias}</span>
-                      {isMe && (
-                        <span className="text-[9px] uppercase tracking-widest text-accent/70">
-                          {t("lb.youTag")}
+        <div className="max-h-[55vh] overflow-y-auto">
+          {/* LIVE NOW */}
+          <div className="px-5 pt-3 pb-1 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase text-accent">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
+                <span className="relative rounded-full h-2 w-2 bg-accent" />
+              </span>
+              {t("lb.liveNow")}
+            </div>
+            <div className="text-[10px] tracking-widest uppercase text-muted-foreground tabular-nums">
+              {liveList.length.toString().padStart(2, "0")} {t("lb.liveCount")}
+            </div>
+          </div>
+          <div className="px-3 pb-3">
+            {liveList.length === 0 ? (
+              <div className="text-xs text-muted-foreground py-4 text-center">
+                {t("lb.noLive")}
+              </div>
+            ) : (
+              <ol className="space-y-1">
+                {liveList.map((p, i) => {
+                  const isMe = p.alias === alias;
+                  return (
+                    <li
+                      key={`live-${p.alias}`}
+                      className={`flex items-center justify-between font-mono text-sm py-2 px-3 rounded ${
+                        isMe ? "bg-accent/10 text-foreground" : "text-muted-foreground"
+                      }`}
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="text-[10px] w-6 text-right opacity-60">
+                          {(i + 1).toString().padStart(2, "0")}
                         </span>
-                      )}
-                    </span>
-                    <span className="tabular-nums text-foreground">
-                      {formatDuration(e.longest_seconds)}
-                    </span>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
+                        <span className="relative flex h-1.5 w-1.5">
+                          <span className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
+                          <span className="relative rounded-full h-1.5 w-1.5 bg-accent" />
+                        </span>
+                        <span className={isMe ? "text-accent" : ""}>{p.alias}</span>
+                        {isMe && (
+                          <span className="text-[9px] uppercase tracking-widest text-accent/70">
+                            {t("lb.youTag")}
+                          </span>
+                        )}
+                      </span>
+                      <span className="tabular-nums text-foreground">
+                        {formatDuration(p.seconds)}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+          </div>
+
+          {/* RECORDS */}
+          <div className="px-5 pt-3 pb-1 flex items-center gap-2 border-t border-border/60">
+            <Radio className="w-3 h-3 text-muted-foreground" />
+            <span className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
+              {t("lb.records")}
+            </span>
+          </div>
+          <div className="px-3 pb-3">
+            {loading && entries.length === 0 ? (
+              <div className="text-xs text-muted-foreground py-4 text-center">
+                {t("lb.loading")}
+              </div>
+            ) : entries.length === 0 ? (
+              <div className="text-xs text-muted-foreground py-4 text-center">
+                {t("lb.empty")}
+              </div>
+            ) : (
+              <ol className="space-y-1">
+                {entries.map((e: LeaderboardEntry, i) => {
+                  const isMe = e.alias === alias;
+                  return (
+                    <li
+                      key={`rec-${e.alias}`}
+                      className={`flex items-center justify-between font-mono text-sm py-2 px-3 rounded ${
+                        isMe ? "bg-accent/5 text-foreground" : "text-muted-foreground"
+                      }`}
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="text-[10px] w-6 text-right opacity-60">
+                          {(i + 1).toString().padStart(2, "0")}
+                        </span>
+                        <span className={isMe ? "text-accent" : ""}>{e.alias}</span>
+                      </span>
+                      <span className="tabular-nums text-foreground/80">
+                        {formatDuration(e.longest_seconds)}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+          </div>
         </div>
 
-        <div className="px-5 py-3 border-t border-border/60 text-[10px] tracking-widest uppercase text-muted-foreground flex items-center justify-between">
-          <span>
-            {myIndex >= 0 ? `${t("lb.rank")} #${(myIndex + 1).toString().padStart(2, "0")}` : t("lb.unranked")}
-          </span>
-          <span className="flex items-center gap-2" title={`Next update in ${nextRefresh}s`}>
-            <svg width="14" height="14" viewBox="0 0 20 20" className="-rotate-90">
-              <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" strokeWidth="1.5" className="opacity-20" />
-              <circle
-                cx="10"
-                cy="10"
-                r="8"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeDasharray={2 * Math.PI * 8}
-                strokeDashoffset={2 * Math.PI * 8 * (1 - nextRefresh / 60)}
-                className="text-accent transition-[stroke-dashoffset] duration-1000 ease-linear"
-                style={{ stroke: "currentColor" }}
-              />
-            </svg>
-            <span className="tabular-nums">{nextRefresh.toString().padStart(2, "0")}s</span>
-          </span>
+        <div className="px-5 py-3 border-t border-border/60 text-[10px] tracking-widest uppercase text-muted-foreground">
+          {myLiveRank >= 0
+            ? `${t("lb.rank")} #${(myLiveRank + 1).toString().padStart(2, "0")} · ${t("lb.liveNow")}`
+            : t("lb.unranked")}
         </div>
       </div>
     </div>

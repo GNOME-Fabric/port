@@ -11,6 +11,7 @@ import { CustomCursor } from "@/components/site/CustomCursor";
 import { useSessionRecorder } from "@/hooks/use-session-recorder";
 import { useEffect } from "react";
 import { startLeaderboardPolling, stopLeaderboardPolling } from "@/lib/leaderboard-store";
+import { startPresence, stopPresence } from "@/lib/presence";
 import ogImage from "@/assets/og-matsuo.jpg.asset.json";
 
 const OG_IMAGE_URL = `https://matsuo-portfolio.lovable.app${ogImage.url}`;
@@ -45,7 +46,11 @@ function Index() {
   useSessionRecorder();
   useEffect(() => {
     startLeaderboardPolling();
-    return () => stopLeaderboardPolling();
+    startPresence();
+    return () => {
+      stopLeaderboardPolling();
+      stopPresence();
+    };
   }, []);
   return (
     <div className="min-h-screen text-foreground relative">
