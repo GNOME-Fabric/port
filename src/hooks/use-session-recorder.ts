@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { recordSession } from "@/lib/leaderboard";
+import { recordSession, recordSessionBeacon } from "@/lib/leaderboard";
 
 // Module-level session start so every consumer agrees on the duration.
 let sessionStart: number | null = null;
@@ -25,13 +25,22 @@ export function useSessionRecorder() {
 
     const send = () => {
       const secs = getSessionSeconds();
-      if (secs - lastSent.current < 15) return;
+      if (secs - lastSent.current < 5) return;
       lastSent.current = secs;
       recordSession(secs).catch(() => {});
     };
 
-    const interval = window.setInterval(send, 30_000);
-    const onHide = () => send();
+    // Frequent-but-cheap: every 10s captures near-exact times without
+    // hammering the RPC. Combined with the beacon below, the final value
+    // stored is at most ~1 second behind reality.
+    const interval = window.setInterval(send, 10_000);
+
+    const onHide = () => {
+      const secs = getSessionSeconds();
+      lastSent.current = secs;
+      // keepalive fetch survives unload; normal RPC does not.
+      recordSessionBeacon(secs);
+    };
     document.addEventListener("visibilitychange", onHide);
     window.addEventListener("pagehide", onHide);
 
