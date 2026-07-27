@@ -169,11 +169,28 @@ export function LeaderboardModal({ open, onClose }: Props) {
           )}
         </div>
 
-        <div className="px-5 py-3 border-t border-border/60 text-[10px] tracking-widest uppercase text-muted-foreground flex justify-between">
+        <div className="px-5 py-3 border-t border-border/60 text-[10px] tracking-widest uppercase text-muted-foreground flex items-center justify-between">
           <span>
             {myIndex >= 0 ? `${t("lb.rank")} #${(myIndex + 1).toString().padStart(2, "0")}` : t("lb.unranked")}
           </span>
-          <span>{t("lb.hint")}</span>
+          <span className="flex items-center gap-2" title={`Next update in ${nextRefresh}s`}>
+            <svg width="14" height="14" viewBox="0 0 20 20" className="-rotate-90">
+              <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" strokeWidth="1.5" className="opacity-20" />
+              <circle
+                cx="10"
+                cy="10"
+                r="8"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeDasharray={2 * Math.PI * 8}
+                strokeDashoffset={2 * Math.PI * 8 * (1 - nextRefresh / 60)}
+                className="text-accent transition-[stroke-dashoffset] duration-1000 ease-linear"
+                style={{ stroke: "currentColor" }}
+              />
+            </svg>
+            <span className="tabular-nums">{nextRefresh.toString().padStart(2, "0")}s</span>
+          </span>
         </div>
       </div>
     </div>
