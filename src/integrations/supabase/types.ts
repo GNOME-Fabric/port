@@ -14,13 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      session_records: {
+        Row: {
+          alias: string
+          created_at: string
+          id: string
+          longest_seconds: number
+          secret: string
+          updated_at: string
+        }
+        Insert: {
+          alias: string
+          created_at?: string
+          id?: string
+          longest_seconds?: number
+          secret: string
+          updated_at?: string
+        }
+        Update: {
+          alias?: string
+          created_at?: string
+          id?: string
+          longest_seconds?: number
+          secret?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_session_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          alias: string
+          longest_seconds: number
+          updated_at: string
+        }[]
+      }
+      record_session: {
+        Args: { _alias: string; _seconds: number; _secret: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
