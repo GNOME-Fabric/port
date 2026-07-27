@@ -51,7 +51,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
 
   if (!open) return null;
 
-  const myIndex = entries.findIndex((e) => e.alias === identity.alias);
+  const myIndex = entries.findIndex((e) => e.alias === alias);
 
   return (
     <div
@@ -87,7 +87,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
             <div className="text-[10px] tracking-widest uppercase text-muted-foreground">
               {t("lb.you")}
             </div>
-            <div className="font-mono text-sm text-foreground">{identity.alias}</div>
+            <div className="font-mono text-sm text-foreground">{alias}</div>
           </div>
           <div className="text-right">
             <div className="text-[10px] tracking-widest uppercase text-muted-foreground">
@@ -107,7 +107,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
           ) : (
             <ol className="space-y-1">
               {entries.map((e, i) => {
-                const isMe = e.alias === identity.alias;
+                const isMe = e.alias === alias;
                 return (
                   <li
                     key={e.alias}
