@@ -59,7 +59,7 @@ export function setStoredBest(seconds: number): void {
 }
 
 export async function recordSession(seconds: number): Promise<void> {
-  if (seconds < 1) return;
+  if (seconds < 60) return; // skip sessions shorter than 1 minute
   let id: Identity;
   try {
     id = await getIdentity();
