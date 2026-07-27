@@ -6,7 +6,8 @@ import { getSessionSeconds } from "@/hooks/use-session-recorder";
 
 export type LivePresence = { alias: string; seconds: number };
 
-const TRACK_MS = 2_000;
+const TRACK_MS_ACTIVE = 2_000;
+const TRACK_MS_HIDDEN = 10_000;
 const CHANNEL_NAME = "leaderboard-live";
 
 let channel: RealtimeChannel | null = null;
@@ -58,8 +59,17 @@ export async function startPresence() {
     const push = () => {
       ch.track({ alias: id.alias, seconds: getSessionSeconds() }).catch(() => {});
     };
+    const schedule = () => {
+      if (trackInterval != null) window.clearInterval(trackInterval);
+      const ms = document.hidden ? TRACK_MS_HIDDEN : TRACK_MS_ACTIVE;
+      trackInterval = window.setInterval(push, ms);
+    };
     push();
-    trackInterval = window.setInterval(push, TRACK_MS);
+    schedule();
+    document.addEventListener("visibilitychange", () => {
+      push();
+      schedule();
+    });
   });
 }
 
