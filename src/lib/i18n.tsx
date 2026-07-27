@@ -79,6 +79,19 @@ const EN: Dict = {
   "footer.title": "Start the Render",
   "footer.body": "Currently accepting long and short-form contracts. Reply within 24h.",
   "footer.tag": "Cut with precision · 2026",
+
+  "lb.title": "Session Leaderboard",
+  "lb.subtitle": "Longest single visit · anonymous",
+  "lb.you": "You are",
+  "lb.session": "This session",
+  "lb.loading": "Loading rankings…",
+  "lb.empty": "No sessions recorded yet — you might be first.",
+  "lb.rank": "Your rank",
+  "lb.unranked": "Stay a bit longer to appear on the board.",
+  "lb.youTag": "you",
+  "lb.hint": "Click the timecode to reopen",
+  "lb.close": "Close",
+  "hero.tcHint": "Click for leaderboard",
 };
 
 const PT: Dict = {
@@ -156,6 +169,19 @@ const PT: Dict = {
   "footer.title": "Start the Render",
   "footer.body": "Aceitando contratos long e short-form. Resposta em até 24h.",
   "footer.tag": "Cortado com precisão · 2026",
+
+  "lb.title": "Ranking de Sessão",
+  "lb.subtitle": "Visita única mais longa · anônimo",
+  "lb.you": "Você é",
+  "lb.session": "Esta sessão",
+  "lb.loading": "Carregando ranking…",
+  "lb.empty": "Nenhuma sessão registrada ainda — talvez você seja o primeiro.",
+  "lb.rank": "Sua posição",
+  "lb.unranked": "Fique mais um pouco para aparecer no ranking.",
+  "lb.youTag": "você",
+  "lb.hint": "Clique no timecode para reabrir",
+  "lb.close": "Fechar",
+  "hero.tcHint": "Clique para ver o ranking",
 };
 
 const DICTS: Record<Lang, Dict> = { en: EN, pt: PT };
