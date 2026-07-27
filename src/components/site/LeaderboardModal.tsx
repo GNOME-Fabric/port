@@ -19,6 +19,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [now, setNow] = useState(() => getSessionSeconds());
   const [alias, setAlias] = useState("");
+  const [nextRefresh, setNextRefresh] = useState(60);
 
   useEffect(() => {
     if (!open) return;
@@ -30,8 +31,9 @@ export function LeaderboardModal({ open, onClose }: Props) {
     setLoading(true);
     getIdentity().then((id) => setAlias(id.alias)).catch(() => {});
 
-    const refresh = () =>
-      recordSession(getSessionSeconds())
+    const refresh = () => {
+      setNextRefresh(60);
+      return recordSession(getSessionSeconds())
         .catch(() => {})
         .finally(() => {
           fetchLeaderboard(20)
@@ -39,10 +41,14 @@ export function LeaderboardModal({ open, onClose }: Props) {
             .catch(() => {})
             .finally(() => setLoading(false));
         });
+    };
 
     refresh();
 
-    const tick = window.setInterval(() => setNow(getSessionSeconds()), 1000);
+    const tick = window.setInterval(() => {
+      setNow(getSessionSeconds());
+      setNextRefresh((n) => (n <= 1 ? 60 : n - 1));
+    }, 1000);
     const poll = window.setInterval(refresh, 60000);
 
     return () => {
@@ -163,11 +169,28 @@ export function LeaderboardModal({ open, onClose }: Props) {
           )}
         </div>
 
-        <div className="px-5 py-3 border-t border-border/60 text-[10px] tracking-widest uppercase text-muted-foreground flex justify-between">
+        <div className="px-5 py-3 border-t border-border/60 text-[10px] tracking-widest uppercase text-muted-foreground flex items-center justify-between">
           <span>
             {myIndex >= 0 ? `${t("lb.rank")} #${(myIndex + 1).toString().padStart(2, "0")}` : t("lb.unranked")}
           </span>
-          <span>{t("lb.hint")}</span>
+          <span className="flex items-center gap-2" title={`Next update in ${nextRefresh}s`}>
+            <svg width="14" height="14" viewBox="0 0 20 20" className="-rotate-90">
+              <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" strokeWidth="1.5" className="opacity-20" />
+              <circle
+                cx="10"
+                cy="10"
+                r="8"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeDasharray={2 * Math.PI * 8}
+                strokeDashoffset={2 * Math.PI * 8 * (1 - nextRefresh / 60)}
+                className="text-accent transition-[stroke-dashoffset] duration-1000 ease-linear"
+                style={{ stroke: "currentColor" }}
+              />
+            </svg>
+            <span className="tabular-nums">{nextRefresh.toString().padStart(2, "0")}s</span>
+          </span>
         </div>
       </div>
     </div>
