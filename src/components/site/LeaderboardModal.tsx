@@ -71,6 +71,17 @@ export function LeaderboardModal({ open, onClose }: Props) {
 
   const myLiveRank = liveList.findIndex((p) => p.alias === alias);
 
+  const liveCapped = useMemo(
+    () => capWithSelf(liveList, (p) => p.alias === alias),
+    [liveList, alias]
+  );
+  const recordsCapped = useMemo(
+    () => capWithSelf(entries, (e) => e.alias === alias),
+    [entries, alias]
+  );
+
+  const liveFlipRef = useFlip<HTMLOListElement>(liveCapped.visible.map((p) => p.alias));
+
   if (!open) return null;
 
   return (
