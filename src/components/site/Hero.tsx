@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { useReveal } from "@/hooks/use-reveal";
 import { Timecode } from "./Timecode";
 import { ContactIcons } from "./ContactIcons";
 import { useI18n } from "@/lib/i18n";
+import { LeaderboardModal } from "./LeaderboardModal";
 
 export function Hero() {
   const ref = useReveal<HTMLDivElement>();
   const { t } = useI18n();
+  const [lbOpen, setLbOpen] = useState(false);
+
   return (
     <section id="top" className="pt-40 pb-16">
       <div ref={ref} className="max-w-6xl mx-auto px-6">
@@ -31,12 +35,22 @@ export function Hero() {
             <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1">
               {t("hero.timecode")}
             </div>
-            <div className="text-3xl font-heading text-accent leading-none text-glow">
+            <button
+              type="button"
+              onClick={() => setLbOpen(true)}
+              aria-label={t("hero.tcHint")}
+              title={t("hero.tcHint")}
+              className="group block text-3xl font-heading text-accent leading-none text-glow transition hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-accent/50 rounded-sm"
+            >
               <Timecode />
-            </div>
+              <span className="block mt-1 text-[9px] font-medium text-muted-foreground uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition">
+                {t("hero.tcHint")}
+              </span>
+            </button>
           </div>
         </div>
       </div>
+      <LeaderboardModal open={lbOpen} onClose={() => setLbOpen(false)} />
     </section>
   );
 }
