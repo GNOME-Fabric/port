@@ -19,6 +19,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [now, setNow] = useState(() => getSessionSeconds());
   const [alias, setAlias] = useState("");
+  const [nextRefresh, setNextRefresh] = useState(60);
 
   useEffect(() => {
     if (!open) return;
@@ -30,8 +31,9 @@ export function LeaderboardModal({ open, onClose }: Props) {
     setLoading(true);
     getIdentity().then((id) => setAlias(id.alias)).catch(() => {});
 
-    const refresh = () =>
-      recordSession(getSessionSeconds())
+    const refresh = () => {
+      setNextRefresh(60);
+      return recordSession(getSessionSeconds())
         .catch(() => {})
         .finally(() => {
           fetchLeaderboard(20)
@@ -39,10 +41,14 @@ export function LeaderboardModal({ open, onClose }: Props) {
             .catch(() => {})
             .finally(() => setLoading(false));
         });
+    };
 
     refresh();
 
-    const tick = window.setInterval(() => setNow(getSessionSeconds()), 1000);
+    const tick = window.setInterval(() => {
+      setNow(getSessionSeconds());
+      setNextRefresh((n) => (n <= 1 ? 60 : n - 1));
+    }, 1000);
     const poll = window.setInterval(refresh, 60000);
 
     return () => {
