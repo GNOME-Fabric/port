@@ -128,7 +128,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
             <div className="text-xs text-muted-foreground py-6 text-center">{t("lb.empty")}</div>
           ) : (
             <ol className="space-y-1">
-              {entries.map((e, i) => {
+              {liveEntries.map((e, i) => {
                 const isMe = e.alias === alias;
                 return (
                   <li
