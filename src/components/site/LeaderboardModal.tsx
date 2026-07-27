@@ -29,22 +29,27 @@ export function LeaderboardModal({ open, onClose }: Props) {
 
     setLoading(true);
     getIdentity().then((id) => setAlias(id.alias)).catch(() => {});
-    // Push our latest score first, then fetch, so we appear immediately.
-    recordSession(getSessionSeconds())
-      .catch(() => {})
-      .finally(() => {
-        fetchLeaderboard(20)
-          .then(setEntries)
-          .catch(() => {})
-          .finally(() => setLoading(false));
-      });
+
+    const refresh = () =>
+      recordSession(getSessionSeconds())
+        .catch(() => {})
+        .finally(() => {
+          fetchLeaderboard(20)
+            .then(setEntries)
+            .catch(() => {})
+            .finally(() => setLoading(false));
+        });
+
+    refresh();
 
     const tick = window.setInterval(() => setNow(getSessionSeconds()), 1000);
+    const poll = window.setInterval(refresh, 60000);
 
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
       window.clearInterval(tick);
+      window.clearInterval(poll);
       closeVideoModal();
     };
   }, [open, onClose]);
