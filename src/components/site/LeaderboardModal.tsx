@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { X, Trophy, Radio } from "lucide-react";
 import {
   formatDuration,
@@ -259,7 +259,7 @@ export function LeaderboardModal({ open, onClose }: Props) {
                           {formatDuration(e.longest_seconds)}
                         </span>
                       </li>
-                    </div>
+                    </React.Fragment>
                   );
                 })}
               </ol>
