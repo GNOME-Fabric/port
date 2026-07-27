@@ -59,7 +59,7 @@ export function setStoredBest(seconds: number): void {
 }
 
 export async function recordSession(seconds: number): Promise<void> {
-  if (seconds < 5) return; // skip micro sessions
+  if (seconds < 1) return;
   let id: Identity;
   try {
     id = await getIdentity();
@@ -72,6 +72,36 @@ export async function recordSession(seconds: number): Promise<void> {
     _seconds: Math.floor(seconds),
   });
   setStoredBest(Math.max(getStoredBest(), Math.floor(seconds)));
+}
+
+/**
+ * Fire-and-forget send that survives page unload. Uses `fetch` with `keepalive`
+ * so the browser guarantees delivery even while the tab is closing — unlike
+ * `supabase.rpc`, which uses a regular fetch the browser will cancel on unload.
+ */
+export function recordSessionBeacon(seconds: number): void {
+  if (seconds < 1 || typeof window === "undefined") return;
+  if (!cached) return; // no identity resolved yet; nothing to send
+  const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/record_session`;
+  const apikey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+  const body = JSON.stringify({
+    _alias: cached.alias,
+    _secret: cached.secret,
+    _seconds: Math.floor(seconds),
+  });
+  try {
+    fetch(url, {
+      method: "POST",
+      keepalive: true,
+      headers: {
+        "content-type": "application/json",
+        apikey,
+        authorization: `Bearer ${apikey}`,
+      },
+      body,
+    }).catch(() => {});
+    setStoredBest(Math.max(getStoredBest(), Math.floor(seconds)));
+  } catch {}
 }
 
 
