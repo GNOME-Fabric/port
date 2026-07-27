@@ -27,7 +27,10 @@ function extractIp(req: Request): string {
 export const getIpIdentity = createServerFn({ method: "GET" }).handler(async () => {
   const req = getRequest();
   const ip = extractIp(req);
-  const salt = process.env.LEADERBOARD_SALT || "matsuo-leaderboard-v1-salt";
+  const salt = process.env.LEADERBOARD_SALT;
+  if (!salt) {
+    throw new Error("LEADERBOARD_SALT is not configured");
+  }
   // Hash IP with salt — the raw IP is never stored or returned.
   const hash = createHash("sha256").update(`${salt}|${ip}`).digest("hex");
   const n1 = parseInt(hash.slice(0, 8), 16);
