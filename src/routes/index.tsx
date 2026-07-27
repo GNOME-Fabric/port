@@ -9,6 +9,8 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { ParticlesBackground } from "@/components/site/ParticlesBackground";
 import { CustomCursor } from "@/components/site/CustomCursor";
 import { useSessionRecorder } from "@/hooks/use-session-recorder";
+import { useEffect } from "react";
+import { startLeaderboardPolling, stopLeaderboardPolling } from "@/lib/leaderboard-store";
 import ogImage from "@/assets/og-matsuo.jpg.asset.json";
 
 const OG_IMAGE_URL = `https://matsuo-portfolio.lovable.app${ogImage.url}`;
