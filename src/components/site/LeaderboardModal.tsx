@@ -7,7 +7,7 @@ import {
   type LeaderboardEntry,
 } from "@/lib/leaderboard";
 import { getSessionSeconds } from "@/hooks/use-session-recorder";
-import { useLeaderboardStore, refreshLeaderboardNow } from "@/lib/leaderboard-store";
+import { useLeaderboardStore } from "@/lib/leaderboard-store";
 import { useI18n } from "@/lib/i18n";
 import { openVideoModal, closeVideoModal } from "@/lib/modal-state";
 
