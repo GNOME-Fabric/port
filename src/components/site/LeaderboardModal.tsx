@@ -7,7 +7,7 @@ import {
   type LeaderboardEntry,
 } from "@/lib/leaderboard";
 import { getSessionSeconds } from "@/hooks/use-session-recorder";
-import { useLeaderboardStore, refreshLeaderboardNow } from "@/lib/leaderboard-store";
+import { useLeaderboardStore } from "@/lib/leaderboard-store";
 import { useI18n } from "@/lib/i18n";
 import { openVideoModal, closeVideoModal } from "@/lib/modal-state";
 
@@ -27,10 +27,8 @@ export function LeaderboardModal({ open, onClose }: Props) {
     document.body.style.overflow = "hidden";
 
     getIdentity().then((id) => setAlias(id.alias)).catch(() => {});
-    // Push our latest score so we appear immediately, then force a fresh fetch.
-    recordSession(getSessionSeconds())
-      .catch(() => {})
-      .finally(() => refreshLeaderboardNow());
+    // Push our latest score in the background; the global 60s poll will pick it up.
+    recordSession(getSessionSeconds()).catch(() => {});
 
     const tick = window.setInterval(() => setNow(getSessionSeconds()), 1000);
 
